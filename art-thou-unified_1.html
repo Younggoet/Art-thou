@@ -1,0 +1,155 @@
+='font-size:.6rem;color:var(--gold);padding:.4rem 0;';d.textContent='Counter of $'+val.toLocaleString()+' sent';actions.innerHTML='';actions.appendChild(d);}setTimeout(function(){card.remove();},3500);}
+function declineOffer(btn){var card=btn.closest('.inbox-card');card.style.opacity='0';card.style.transition='opacity .4s';setTimeout(function(){card.remove();},400);}
+
+/* ===== BUY NOW ===== */
+function openBuyNow(title,price){
+  var p=document.getElementById('buyNowPiece');if(p)p.textContent=title+(price?' · $'+price:'');
+  var l=document.getElementById('buyNowEmailLink');if(l)l.href='mailto:hello@artthou.com?subject=I want to buy: '+encodeURIComponent(title);
+  var o=document.getElementById('buyNowOverlay');if(o)o.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeBuyNow(){var o=document.getElementById('buyNowOverlay');if(o)o.classList.remove('open');document.body.style.overflow='';}
+
+/* ===== DAILY ARTWORK ===== */
+var dailyArtworks=[
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/800px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg',title:'Mona Lisa — Leonardo da Vinci',origin:'c. 1503 · Florence, Italy'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg',title:'The Starry Night — Vincent van Gogh',origin:'1889 · France · MoMA, New York'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Parthenon_in_Athens.jpg/1280px-The_Parthenon_in_Athens.jpg',title:'The Parthenon — Acropolis of Athens',origin:'438 BCE · Classical Greece'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1280px-Taj_Mahal_%28Edited%29.jpeg',title:'The Taj Mahal — Shah Jahan',origin:'1632 · Mughal Empire · Agra, India'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/All_Gizah_Pyramids.jpg/1280px-All_Gizah_Pyramids.jpg',title:'The Pyramids of Giza',origin:'c. 2560 BCE · Ancient Egypt'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Sandro_Botticelli_046.jpg/1280px-Sandro_Botticelli_046.jpg',title:'The Birth of Venus — Botticelli',origin:'c. 1484 · Florence, Italy · Uffizi Gallery'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/800px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg',title:'Wanderer above the Sea of Fog — Friedrich',origin:'c. 1818 · German Romanticism'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/800px-1665_Girl_with_a_Pearl_Earring.jpg',title:'Girl with a Pearl Earring — Vermeer',origin:'c. 1665 · Netherlands · Mauritshuis'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/800px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg',title:'The Scream — Edvard Munch',origin:'1893 · Oslo, Norway'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg/1280px-Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg',title:'The Creation of Adam — Michelangelo',origin:'1508 · Vatican City · Sistine Chapel'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tsunami_by_hokusai_19th_century.jpg/1280px-Tsunami_by_hokusai_19th_century.jpg',title:'The Great Wave — Katsushika Hokusai',origin:'c. 1831 · Edo Period Japan'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Machu_Picchu%2C_Peru.jpg/1280px-Machu_Picchu%2C_Peru.jpg',title:'Machu Picchu — Inca Citadel',origin:'c. 1450 CE · Peru'}
+];
+function loadDailyArtwork(){
+  var now=new Date();var start=new Date(now.getFullYear(),0,0);
+  var day=Math.floor((now-start)/(1000*60*60*24));
+  var art=dailyArtworks[day%dailyArtworks.length];
+  var img=document.getElementById('dailyImg');
+  var title=document.getElementById('dailyCaptionTitle');
+  var origin=document.getElementById('dailyCaptionOrigin');
+  if(!img)return;
+  img.style.opacity='0';img.style.transition='opacity 1.5s ease';
+  img.onload=function(){img.style.opacity='1';};
+  img.onerror=function(){img.src=dailyArtworks[0].url;img.style.opacity='1';};
+  img.src=art.url;
+  if(title)title.textContent=art.title;
+  if(origin)origin.textContent=art.origin;
+}
+
+/* ===== DAILY QUOTES ===== */
+var quotes=[
+  {text:"Art enables us to find ourselves and lose ourselves at the same time.",author:"— Thomas Merton"},
+  {text:"The purpose of art is washing the dust of daily life off our souls.",author:"— Pablo Picasso"},
+  {text:"Every artist dips their brush in their own soul.",author:"— Henry Ward Beecher"},
+  {text:"Creativity takes courage.",author:"— Henri Matisse"},
+  {text:"Art is not what you see, but what you make others see.",author:"— Edgar Degas"},
+  {text:"The Earth without art is just eh.",author:"— Unknown"},
+  {text:"To create one's own world takes courage.",author:"— Georgia O'Keeffe"},
+  {text:"Every child is an artist. The problem is how to remain one once we grow up.",author:"— Pablo Picasso"}
+];
+var cq=0,dqT,dqA,dqN;
+function bDots(){if(!dqN)return;dqN.innerHTML='';quotes.forEach(function(_,i){var d=document.createElement('div');d.className='dq-dot'+(i===cq?' active':'');d.addEventListener('click',function(){setQ(i);});dqN.appendChild(d);});}
+function setQ(i){cq=i;if(dqT){dqT.style.opacity='0';setTimeout(function(){dqT.textContent=quotes[i].text;dqT.style.opacity='1';},350);}if(dqA)dqA.textContent=quotes[i].author;bDots();}
+
+/* ===== NAV DROPDOWNS ===== */
+function initNavDropdowns(){
+  document.querySelectorAll('.nav-item').forEach(function(item){
+    var drop=item.querySelector('.nav-drop');if(!drop)return;
+    var timer=null;
+    function openDrop(){clearTimeout(timer);drop.style.display='block';}
+    function closeDrop(){timer=setTimeout(function(){drop.style.display='none';},200);}
+    item.addEventListener('mouseenter',openDrop);
+    item.addEventListener('mouseleave',closeDrop);
+    drop.addEventListener('mouseenter',function(){clearTimeout(timer);});
+    drop.addEventListener('mouseleave',closeDrop);
+  });
+  document.addEventListener('click',function(e){if(!e.target.closest('.nav-item')){document.querySelectorAll('.nav-drop').forEach(function(d){d.style.display='none';});}});
+}
+
+/* ===== AIRTABLE ===== */
+var AT_KEY='';   /* <-- paste your Airtable token here */
+var AT_BASE='';  /* <-- paste your Base ID here */
+var AT_TBL='Listings';
+
+function initAirtable(){
+  if(!AT_KEY||!AT_BASE){var b=document.getElementById('atSetupBanner');if(b)b.style.display='flex';return;}
+  var b=document.getElementById('atSetupBanner');if(b)b.style.display='none';
+  loadListings();loadTop5();
+}
+function loadListings(){
+  var grid=document.getElementById('atListingsGrid');var spin=document.getElementById('atLoadingState');
+  if(!grid)return;if(spin)spin.style.display='flex';
+  fetch('https://api.airtable.com/v0/'+AT_BASE+'/'+encodeURIComponent(AT_TBL)+'?filterByFormula={Status}%3D"Approved"&maxRecords=100',{headers:{'Authorization':'Bearer '+AT_KEY}})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(spin)spin.style.display='none';
+    if(!d.records||!d.records.length){grid.innerHTML='<div class="at-empty">No listings yet — add your first creator in Airtable</div>';return;}
+    var colors=['l1','l2','l3'];var html='';
+    d.records.forEach(function(rec,i){
+      var f=rec.fields;
+      var title=f.Title||'Untitled';var creator=f.Creator||'Creator';var city=f.City||'';var country=f.Country||'';
+      var price=f.Price?'$'+f.Price:'POA';var badge=f.Badge||'New';var image=f.Image||'';var emoji=f.Emoji||'🎨';
+      var openComm=(f.Commissions===true||f.Commissions==='true'||f.Commissions==='Yes');
+      var commHtml=openComm?'<span class="commission-badge"><span class="cm-icon">✦</span>Open to Commissions</span>':'';
+      var loc=[city,country].filter(Boolean).join(', ');var col=colors[i%3];
+      var imgHtml=image?'<img class="at-listing-img" src="'+image+'" alt="'+title+'">':'<div class="at-listing-emoji">'+emoji+'</div>';
+      html+='<div class="listing-card '+col+' reveal"><div class="listing-img"><div class="listing-badge">'+badge+'</div>'+imgHtml+'</div><div class="listing-info"><div class="listing-origin">'+(loc?'📍 '+loc:'')+'</div><div class="listing-title">'+title+'</div><div class="listing-creator">by '+creator+'</div>'+(commHtml?'<div style="margin:.3rem 0 .1rem;">'+commHtml+'</div>':'')+'<div class="listing-foot"><div class="listing-price">'+price+'</div><div style="display:flex;gap:.5rem;"><button class="offer-btn at-offer-btn" data-title="'+title.replace(/"/g,'&quot;')+'" data-creator="'+creator+(city?' · '+city:'')+'" data-emoji="'+emoji+'" data-price="'+(f.Price||0)+'">Make Offer</button><button class="listing-btn at-buy-btn" data-title="'+title.replace(/"/g,'&quot;')+'" data-price="'+(f.Price||0)+'">Buy Now</button></div></div></div></div>';
+    });
+    grid.innerHTML=html;
+    var cnt=document.getElementById('listingCount');if(cnt)cnt.textContent=d.records.length+' piece'+(d.records.length!==1?'s':'')+' available';
+    setTimeout(triggerReveals,100);
+  })
+  .catch(function(){if(spin)spin.style.display='none';if(grid)grid.innerHTML='<div class="at-error">Could not load listings — check your Airtable connection</div>';});
+}
+function loadTop5(){
+  if(!AT_KEY||!AT_BASE)return;
+  fetch('https://api.airtable.com/v0/'+AT_BASE+'/'+encodeURIComponent(AT_TBL)+'?filterByFormula=AND({Status}%3D"Approved",{Featured}%3D1)&maxRecords=5',{headers:{'Authorization':'Bearer '+AT_KEY}})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(!d.records||!d.records.length)return;
+    d.records.forEach(function(rec,i){
+      var f=rec.fields;var card=document.getElementById('top5card'+(i+1));if(!card)return;
+      var imgEl=card.querySelector('.top5-img');if(imgEl)imgEl.innerHTML=f.Image?'<img src="'+f.Image+'" style="width:100%;height:100%;object-fit:cover;">':'<span>'+(f.Emoji||'🎨')+'</span>';
+      var o=card.querySelector('.top5-origin');if(o&&(f.City||f.Country))o.textContent='📍 '+[f.City,f.Country].filter(Boolean).join(', ');
+      var t=card.querySelector('.top5-item-title');if(t)t.textContent=f.Title||'Untitled';
+      var c=card.querySelector('.top5-item-creator');if(c)c.textContent='by '+(f.Creator||'Creator');
+      var p=card.querySelector('.top5-price');if(p)p.textContent=f.Price?'$'+f.Price:'POA';
+    });
+  }).catch(function(){});
+}
+
+/* ===== INIT ===== */
+document.addEventListener('DOMContentLoaded',function(){
+  initCursor();
+  initLang();
+  initNavDropdowns();
+  triggerReveals();
+  loadDailyArtwork();
+  setTimeout(updateFlagPreview,200);
+
+  dqT=document.getElementById('dqText');dqA=document.getElementById('dqAuthor');dqN=document.getElementById('dqNav');
+  if(dqT&&dqA&&dqN){setQ(0);setInterval(function(){setQ((cq+1)%quotes.length);},6000);}
+
+  initAirtable();
+
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('.at-buy-btn');
+    if(!btn)return;
+    openBuyNow(btn.getAttribute('data-title')||'this piece',btn.getAttribute('data-price')||'');
+  });
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('.at-offer-btn');
+    if(!btn)return;
+    openOffer(btn.getAttribute('data-title')||'Artwork',btn.getAttribute('data-creator')||'Creator',btn.getAttribute('data-emoji')||'🎨',parseFloat(btn.getAttribute('data-price'))||0);
+  });
+
+  window.addEventListener('scroll',triggerReveals);
+});
+</script>
+</body>
+</html>
