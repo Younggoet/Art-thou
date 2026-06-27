@@ -163,7 +163,20 @@ nav.light .quiet-btn{color:rgba(26,17,8,.5);}
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes pulse{0%,100%{opacity:.15;transform:translate(-50%,-50%) scale(1)}50%{opacity:.4;transform:translate(-50%,-50%) scale(1.03)}}
 @keyframes kenBurns{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.1) translate(-1.5%,-1%)}}
-
+.cf-stage{position:absolute;inset:0;z-index:0;}
+.cf-slide{position:absolute;inset:0;opacity:0;overflow:hidden;animation:cfFade 48s linear infinite;}
+.cf-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;animation:cfZoom 48s linear infinite;animation-delay:inherit;}
+.cf-slide:nth-child(1){animation-delay:0s;}
+.cf-slide:nth-child(2){animation-delay:6s;}
+.cf-slide:nth-child(3){animation-delay:12s;}
+.cf-slide:nth-child(4){animation-delay:18s;}
+.cf-slide:nth-child(5){animation-delay:24s;}
+.cf-slide:nth-child(6){animation-delay:30s;}
+.cf-slide:nth-child(7){animation-delay:36s;}
+.cf-slide:nth-child(8){animation-delay:42s;}
+@keyframes cfFade{0%{opacity:0}2%{opacity:1}10%{opacity:1}12.5%{opacity:0}100%{opacity:0}}
+@keyframes cfZoom{0%{transform:scale(1)}100%{transform:scale(1.1)}}
+.cf-caption{position:absolute;bottom:2.2rem;left:3.5rem;z-index:10;}
 /* HOME SLIDESHOW */
 #home{background:var(--night);}
 .hero-slideshow{position:relative;min-height:100vh;height:100vh;overflow:hidden;display:flex;align-items:center;background:transparent;}
@@ -1276,16 +1289,17 @@ footer{background:var(--night);padding:4.5rem 3.5rem 2.5rem;border-top:1px solid
 
 <section class="hero-slideshow" id="heroSlideshow">
 
-  <!-- DAILY IMAGE HERO — changes every 24 hours -->
-  <div id="dailySlide" style="position:absolute;inset:0;z-index:0;">
-    <img id="dailyImg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;animation:kenBurns 20s ease-out forwards;" src="" alt="">
-    <div class="slide-overlay"></div>
+  <!-- PURE CSS CROSSFADE SLIDESHOW — no JS timing, can't drift or silently fail -->
+  <div class="cf-stage">
+    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/800px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg" alt="Mona Lisa"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">Mona Lisa — Leonardo da Vinci</div><div class="caption-origin">c. 1503 · Florence, Italy · The Louvre, Paris</div></div></div>
+    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" alt="Starry Night"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">The Starry Night — Vincent van Gogh</div><div class="caption-origin">1889 · France · MoMA, New York</div></div></div>
+    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1280px-Taj_Mahal_%28Edited%29.jpeg" alt="Taj Mahal"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">The Taj Mahal — Shah Jahan</div><div class="caption-origin">1632 · Mughal Empire · Agra, India</div></div></div>
+    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/20090529-great-wall-edit.jpg/1280px-20090529-great-wall-edit.jpg" alt="Great Wall of China"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">The Great Wall of China</div><div class="caption-origin">7th Century BCE · China</div></div></div>
+    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Sandro_Botticelli_046.jpg/1280px-Sandro_Botticelli_046.jpg" alt="Birth of Venus"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">The Birth of Venus — Botticelli</div><div class="caption-origin">c. 1484 · Florence, Italy · Uffizi Gallery</div></div></div>
+    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Machu_Picchu%2C_Peru.jpg/1280px-Machu_Picchu%2C_Peru.jpg" alt="Machu Picchu"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">Machu Picchu — Inca Citadel</div><div class="caption-origin">c. 1450 CE · Inca Empire · Peru</div></div></div>
+    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Hagia_Sophia_Istanbul_2014.jpg/1280px-Hagia_Sophia_Istanbul_2014.jpg" alt="Hagia Sophia"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">Hagia Sophia — Byzantine Architecture</div><div class="caption-origin">537 CE · Istanbul, Turkey</div></div></div>
+    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Angkor_Wat_Temple.jpg/1280px-Angkor_Wat_Temple.jpg" alt="Angkor Wat"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">Angkor Wat — Khmer Architecture</div><div class="caption-origin">12th Century · Siem Reap, Cambodia</div></div></div>
   </div>
-  <div class="slide-caption" id="dailyCaption" style="opacity:1;">
-    <div class="caption-title" id="dailyCaptionTitle"></div>
-    <div class="caption-origin" id="dailyCaptionOrigin"></div>
-  </div>
-
   <!-- HERO CONTENT on top of daily image -->
   <div class="hero-content">
     <div class="hero-left">
