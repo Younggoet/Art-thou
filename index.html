@@ -1132,8 +1132,8 @@ footer{background:var(--night);padding:4.5rem 3.5rem 2.5rem;border-top:1px solid
           <div class="nav-drop-item" onclick="showPage('learn')">Teach on Art Thou</div>
       </div>
     </div>
-    <div class="tab-wrap"><button class="mode-tab" id="tab-auction" onclick="showPage('auction')">Open Offers <span class="caret">&#9662;</span></button>
-      <div class="nav-drop">
+    <div class="tab-wrap"><button class="mode-tab" id="tab-reach" onclick="showPage('reach')">Reach</button></div>
+    <div class="tab-wrap"><button class="mode-tab" id="tab-auction" onclick="showPage('auction')">Open Offers <span class="caret">&#9662;</span></button>      <div class="nav-drop">
           <div class="nav-drop-label">Live Right Now</div>
           <div class="nav-drop-item" onclick="showPage('auction')">Live Offers</div>
           <div class="nav-drop-item" onclick="showPage('auction')">Scheduled Offers</div>
@@ -1225,7 +1225,7 @@ footer{background:var(--night);padding:4.5rem 3.5rem 2.5rem;border-top:1px solid
 
   <div class="mobile-menu" id="mobileMenu">
     <div class="m-row" onclick="showPage('home');closeMobileMenu();">Home</div>
-    <div class="m-row" onclick="mAcc(this,'m-shop')">Shop <span class="caret">&#9662;</span></div>
+    <div class="m-row" onclick="showPage('reach');closeMobileMenu();">Reach</div>    <div class="m-row" onclick="mAcc(this,'m-shop')">Shop <span class="caret">&#9662;</span></div>
     <div class="m-sub" id="m-shop">
       <div class="m-sub-item" onclick="jumpRoom('paintings');closeMobileMenu();">Paintings</div>
       <div class="m-sub-item" onclick="jumpRoom('digital');closeMobileMenu();">Digital Art & Downloads</div>
@@ -1701,8 +1701,59 @@ footer{background:var(--night);padding:4.5rem 3.5rem 2.5rem;border-top:1px solid
 </div><!-- /learn -->
 
 <!-- ===================== AUCTION ===================== -->
-<div id="auction" class="page">
+<div id="reach" class="page">
 
+  <div class="shop-hero">
+    <div>
+      <p class="section-label reveal">✦ Direct Access</p>
+      <h2 class="section-title reveal">Reach</h2>
+      <p style="font-size:1.1rem;opacity:.6;font-weight:300;margin-top:.9rem;max-width:560px;">Two ways to connect directly with creators — find the right person for your project, or build something together as artists.</p>
+    </div>
+  </div>
+
+  <section style="padding:0 3.5rem 5rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;max-width:1200px;margin:0 auto;">
+
+    <!-- REACH / HIRE PANEL -->
+    <div class="reveal" style="border:1px solid rgba(212,175,55,.2);border-radius:4px;padding:2.5rem;background:rgba(212,175,55,.03);">
+      <p style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">For Buyers & Brands</p>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--cream);margin-bottom:1rem;">Find the Right Creator</h3>
+      <p style="font-size:.95rem;opacity:.6;line-height:1.8;margin-bottom:2rem;">Looking for someone to bring your vision to life? From murals and brand identity to album art and textile design — connect directly with a creator whose talent fits your project.</p>
+      <div style="border-top:1px solid rgba(212,175,55,.15);padding-top:1.5rem;">
+        <p style="font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;opacity:.4;margin-bottom:.5rem;">Available Categories</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;opacity:.4;">
+          <span style="border:1px solid var(--gold);padding:.3rem .8rem;font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.1em;">Murals</span>
+          <span style="border:1px solid var(--gold);padding:.3rem .8rem;font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.1em;">Brand Identity</span>
+          <span style="border:1px solid var(--gold);padding:.3rem .8rem;font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.1em;">Album Art</span>
+          <span style="border:1px solid var(--gold);padding:.3rem .8rem;font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.1em;">Textile Design</span>
+          <span style="border:1px solid var(--gold);padding:.3rem .8rem;font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.1em;">Illustration</span>
+          <span style="border:1px solid var(--gold);padding:.3rem .8rem;font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.1em;">More at launch</span>
+        </div>
+      </div>
+      <div style="margin-top:2rem;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;opacity:.35;font-style:italic;">Reach opens at launch · Founding creators joining now</div>
+    </div>
+
+    <!-- COLLAB PANEL -->
+    <div class="reveal" style="border:1px solid rgba(212,175,55,.2);border-radius:4px;padding:2.5rem;background:rgba(212,175,55,.03);">
+      <p style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">For Creators · 18+ Only</p>
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--cream);margin-bottom:1rem;">Create Together</h3>
+      <p style="font-size:.95rem;opacity:.6;line-height:1.8;margin-bottom:2rem;">Find another artist to build something with. Post what you're working on, what you're looking for, and connect with someone whose creative energy matches yours. No transaction required — just two artists making something happen.</p>
+      <div style="border-top:1px solid rgba(212,175,55,.15);padding-top:1.5rem;">
+        <p style="font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;opacity:.4;margin-bottom:.5rem;">Connect By</p>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;opacity:.4;">
+          <span style="border:1px solid var(--gold);padding:.3rem .8rem;font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.1em;">Medium</span>
+          <span style="border:1px solid var(--gold);padding:.3rem .8rem;font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.1em;">Style</span>
+          <span style="border:1px solid var(--gold);padding:.3rem .8rem;font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.1em;">Location</span>
+          <span style="border:1px solid var(--gold);padding:.3rem .8rem;font-size:.7rem;font-family:'DM Mono',monospace;letter-spacing:.1em;">Language</span>
+        </div>
+      </div>
+      <div style="margin-top:2rem;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;opacity:.35;font-style:italic;">Collab space opens at launch · Strictly 18 and over</div>
+    </div>
+
+  </section>
+
+</div>
+
+<div id="auction" class="page">
   <!-- HERO -->
   <div class="auction-hero">
     <div class="ah-top">
