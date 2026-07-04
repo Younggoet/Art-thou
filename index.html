@@ -230,8 +230,7 @@ nav.light .quiet-btn{color:rgba(26,17,8,.5);}
 .dq-dot.active{background:var(--gold);transform:scale(1.5);}
 
 /* HOME PILLARS */
-.home-pillars{display:grid;grid-template-columns:1fr 1fr;gap:0;}
-.pillar-block{padding:5rem 3.5rem;cursor:none;transition:background .3s;position:relative;overflow:hidden;}
+.home-pillars{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;}.pillar-block{padding:5rem 3.5rem;cursor:none;transition:background .3s;position:relative;overflow:hidden;}
 .pillar-block.shop-p{background:var(--warm);}
 .pillar-block.learn-p{background:var(--night);color:var(--cream);}
 .pillar-block:hover .p-arrow{transform:translateX(6px);}
@@ -1332,8 +1331,9 @@ footer{background:var(--night);padding:4.5rem 3.5rem 2.5rem;border-top:1px solid
 <div class="home-pillars">
   <div class="pillar-block shop-p" onclick="showPage('shop')"><div class="p-num">01</div><div class="p-icon">🛍️</div><h2 class="p-title">Shop Art<br>from <em>Every Country</em></h2><p class="p-desc">Paintings, crafts, ceramics, clothing — made by hand, made with heart. Each piece ships worldwide from the creator who made it.</p><div class="p-arrow">Browse the Marketplace →</div></div>
   <div class="pillar-block learn-p" onclick="showPage('learn')"><div class="p-num">02</div><div class="p-icon">🎬</div><h2 class="p-title">Learn to<br><em>Create Anything</em></h2><p class="p-desc">Watch real creators teach painting, sewing, ceramics, digital art and more — with subtitles in 30+ languages. Free to start.</p><div class="p-arrow">Start Learning →</div></div>
+  <div class="pillar-block shop-p" onclick="showPage('reach')"><div class="p-num">03</div><div class="p-icon">🤝</div><h2 class="p-title">Reach &<br><em>Collaborate</em></h2><p class="p-desc">Hire a creator for your next project or connect artist-to-artist. Commission original work, find a collaborator, or mentor and be mentored.</p><div class="p-arrow">Find a Creator →</div></div>
+  <div class="pillar-block learn-p" onclick="showPage('auction')"><div class="p-num">04</div><div class="p-icon">🏷️</div><h2 class="p-title">Open<br><em>Offers</em></h2><p class="p-desc">Make an offer on art from anywhere in the world. Name your price, connect with the creator, and own something made just for you.</p><div class="p-arrow">See Live Offers →</div></div>
 </div>
-
 <section class="newsletter"><h2 class="nl-title reveal">A Daily Quote.<br>A New <em>Discovery.</em></h2><p class="nl-sub reveal">Join art lovers from 60+ countries getting inspired every morning.</p><div class="nl-form reveal"><input class="nl-input" type="email" placeholder="your@email.com"/><button class="nl-submit">Join the Movement</button></div></section>
 
 </div><!-- /home -->
