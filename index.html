@@ -1291,18 +1291,33 @@ footer{background:var(--night);padding:4.5rem 3.5rem 2.5rem;border-top:1px solid
 
 <section class="hero-slideshow" id="heroSlideshow">
 
-  <!-- PURE CSS CROSSFADE SLIDESHOW — no JS timing, can't drift or silently fail -->
-  <div class="cf-stage">
-    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/800px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg" alt="Mona Lisa"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">Mona Lisa — Leonardo da Vinci</div><div class="caption-origin">c. 1503 · Florence, Italy · The Louvre, Paris</div></div></div>
-    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" alt="Starry Night"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">The Starry Night — Vincent van Gogh</div><div class="caption-origin">1889 · France · MoMA, New York</div></div></div>
-    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1280px-Taj_Mahal_%28Edited%29.jpeg" alt="Taj Mahal"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">The Taj Mahal — Shah Jahan</div><div class="caption-origin">1632 · Mughal Empire · Agra, India</div></div></div>
-    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/20090529-great-wall-edit.jpg/1280px-20090529-great-wall-edit.jpg" alt="Great Wall of China"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">The Great Wall of China</div><div class="caption-origin">7th Century BCE · China</div></div></div>
-    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Sandro_Botticelli_046.jpg/1280px-Sandro_Botticelli_046.jpg" alt="Birth of Venus"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">The Birth of Venus — Botticelli</div><div class="caption-origin">c. 1484 · Florence, Italy · Uffizi Gallery</div></div></div>
-    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Machu_Picchu%2C_Peru.jpg/1280px-Machu_Picchu%2C_Peru.jpg" alt="Machu Picchu"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">Machu Picchu — Inca Citadel</div><div class="caption-origin">c. 1450 CE · Inca Empire · Peru</div></div></div>
-    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Hagia_Sophia_Istanbul_2014.jpg/1280px-Hagia_Sophia_Istanbul_2014.jpg" alt="Hagia Sophia"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">Hagia Sophia — Byzantine Architecture</div><div class="caption-origin">537 CE · Istanbul, Turkey</div></div></div>
-    <div class="cf-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Angkor_Wat_Temple.jpg/1280px-Angkor_Wat_Temple.jpg" alt="Angkor Wat"><div class="slide-overlay"></div><div class="cf-caption"><div class="caption-title">Angkor Wat — Khmer Architecture</div><div class="caption-origin">12th Century · Siem Reap, Cambodia</div></div></div>
-  </div>
-  <!-- HERO CONTENT on top of daily image -->
+  <canvas id="mexicoPattern" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;"></canvas>
+  <script>
+  (function(){
+    var c=document.getElementById('mexicoPattern');
+    var ctx=c.getContext('2d');
+    var colors=['#c0392b','#e67e22','#f39c12','#27ae60','#2980b9','#8e44ad','#d35400','#16a085'];
+    function drawDiamond(cx,cy,size,color,border){ctx.beginPath();ctx.moveTo(cx,cy-size);ctx.lineTo(cx+size,cy);ctx.lineTo(cx,cy+size);ctx.lineTo(cx-size,cy);ctx.closePath();ctx.fillStyle=color;ctx.fill();if(border){ctx.strokeStyle=border;ctx.lineWidth=1.2;ctx.stroke();}}
+    function draw(){
+      var W=c.offsetWidth||window.innerWidth;
+      var H=c.offsetHeight||window.innerHeight;
+      c.width=W;c.height=H;
+      ctx.fillStyle='#5c1a0a';ctx.fillRect(0,0,W,H);
+      var size=28,gap=62;
+      var cols=Math.ceil(W/gap)+2,rows=Math.ceil(H/gap)+2;
+      for(var r=0;r<rows;r++){for(var col=0;col<cols;col++){
+        var offset=r%2===0?0:gap/2;
+        var cx=col*gap+offset-gap,cy=r*gap-gap;
+        var ci=(r*3+col*2)%colors.length;
+        drawDiamond(cx,cy,size,'#f5e6c8',null);
+        drawDiamond(cx,cy,size*0.68,colors[ci],'#3a1000');
+        drawDiamond(cx,cy,size*0.35,'#f5e6c8',null);
+        ctx.beginPath();ctx.arc(cx,cy,size*0.12,0,Math.PI*2);ctx.fillStyle=colors[ci];ctx.fill();
+      }}
+    }
+    draw();window.addEventListener('resize',draw);
+  })();
+  </script>  <!-- HERO CONTENT on top of daily image -->
   <div class="hero-content">
     <div class="hero-left">
       <p class="h-eyebrow">✦ Art Has Always Belonged to Everyone</p>
