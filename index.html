@@ -219,8 +219,12 @@ nav.light .quiet-btn{color:rgba(26,17,8,.5);}
 .quote-item{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;padding:0 3.5rem;display:inline-flex;align-items:center;gap:1.5rem;}
 .quote-item::after{content:'✦';color:var(--gold);font-style:normal;font-size:.62rem;}
 
-/* DAILY QUOTE */
-.daily-quote{padding:6rem 3.5rem;background:var(--deep);color:var(--cream);text-align:center;position:relative;overflow:hidden;}
+/* WEEKLY QUESTION */
+.weekly-question{padding:4rem 3.5rem;background:var(--deep);color:var(--cream);}
+.wq-label{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;}
+.wq-text{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-style:italic;font-weight:400;line-height:1.2;margin-bottom:2rem;color:var(--cream);}
+
+/* DAILY QUOTE */.daily-quote{padding:6rem 3.5rem;background:var(--deep);color:var(--cream);text-align:center;position:relative;overflow:hidden;}
 .daily-quote::before{content:'"';position:absolute;top:-2rem;left:50%;transform:translateX(-50%);font-family:'Playfair Display',serif;font-size:18rem;color:var(--gold);opacity:.05;pointer-events:none;line-height:1;}
 .dq-label{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem;}
 .dq-text{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3.5vw,3rem);font-style:italic;line-height:1.4;max-width:760px;margin:0 auto 1.5rem;position:relative;z-index:1;transition:opacity .4s;}
@@ -1326,7 +1330,14 @@ footer{background:var(--night);padding:4.5rem 3.5rem 2.5rem;border-top:1px solid
 <!-- TICKER -->
 <div class="quote-bar"><div class="quote-track"><span class="quote-item">"Art enables us to find ourselves and lose ourselves at the same time." — Thomas Merton</span><span class="quote-item">"Every artist dips their brush in their own soul." — Henry Ward Beecher</span><span class="quote-item">"The purpose of art is washing the dust of daily life off our souls." — Picasso</span><span class="quote-item">"Creativity takes courage." — Henri Matisse</span><span class="quote-item">"Art is not what you see, but what you make others see." — Edgar Degas</span><span class="quote-item">"Art enables us to find ourselves and lose ourselves at the same time." — Thomas Merton</span><span class="quote-item">"Every artist dips their brush in their own soul." — Henry Ward Beecher</span><span class="quote-item">"The purpose of art is washing the dust of daily life off our souls." — Picasso</span><span class="quote-item">"Creativity takes courage." — Henri Matisse</span><span class="quote-item">"Art is not what you see, but what you make others see." — Edgar Degas</span></div></div>
 
-<section class="daily-quote"><p class="dq-label">✦ Daily Inspiration ✦</p><div class="dq-text" id="dqText"></div><p class="dq-author" id="dqAuthor"></p><div class="dq-nav" id="dqNav"></div></section>
+<section class="weekly-question">
+  <p class="wq-label">✦ Weekly Question — Week 1</p>
+  <h2 class="wq-text">"What is art?"</h2>
+  <iframe data-tally-src="https://tally.so/embed/gDr9QK?alignLeft=1&hideTitle=1&transparentBackground=1" loading="lazy" width="100%" height="220" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+  <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w;s.onload=v;s.onerror=v;d.body.appendChild(s);}</script>
+</section>
+
+<section class="daily-quote">p class="dq-label">✦ Daily Inspiration ✦</p><div class="dq-text" id="dqText"></div><p class="dq-author" id="dqAuthor"></p><div class="dq-nav" id="dqNav"></div></section>
 
 <div class="home-pillars">
   <div class="pillar-block shop-p" onclick="showPage('shop')"><div class="p-num">01</div><div class="p-icon">🛍️</div><h2 class="p-title">Shop Art<br>from <em>Every Country</em></h2><p class="p-desc">Paintings, crafts, ceramics, clothing — made by hand, made with heart. Each piece ships worldwide from the creator who made it.</p><div class="p-arrow">Browse the Marketplace →</div></div>
