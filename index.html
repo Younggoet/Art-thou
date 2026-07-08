@@ -3322,8 +3322,7 @@ function stripCard(f,key){
   var title=f.Title||'Untitled',creator=f.Creator||'Creator',loc=[f.City,f.Country].filter(Boolean).join(', ');
   var price=f.Price?'$'+f.Price:'POA';
   var img=f.Image?'<img src="'+f.Image+'" alt="">':PAINT_ICON;
-  return '<div class="scard" onclick="showCategory(\''+key+'\')"><div class="scard-img">'+img+'</div><div class="scard-t">'+title+'</div><div class="scard-c">'+creator+(loc?' \u00b7 '+loc:'')+'</div><div class="scard-p">'+price+'</div></div>';
-}
+  return '<div class=\"scard\" onclick=\"showCategory(\\''+key+'\\')\"><div class=\"scard-img\">'+img+'</div><div class=\"scard-body\"><p class=\"scard-country\">'+(f.Country||'')+(f.Category?' \u00b7 '+f.Category:'')+'</p><p class=\"scard-t\">'+title+'</p><div class=\"scard-row\"><span class=\"scard-c\">'+creator+'</span><span class=\"scard-p\">'+price+'</span></div></div></div>';}
 function fullCard(f){
   var title=f.Title||'Untitled',creator=f.Creator||'Creator',city=f.City||'',country=f.Country||'';
   var price=f.Price?'$'+f.Price:'POA',badge=f.Badge||'New',image=f.Image||'';
