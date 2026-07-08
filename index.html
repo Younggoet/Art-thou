@@ -3352,11 +3352,10 @@ function renderRooms(){
       html+='<div class="room-empty">The first '+rm.title.toLowerCase()+' piece is coming at launch.<br>Founding creators joining now.</div>';
     } else {
       var shown=dailyShuffle(items).slice(0,15);
-      html+='<div class="room-daily">\u21bb '+(items.length>15?'15 today \u00b7 reshuffles every 24 hours \u00b7 ':'')+'swipe \u2192</div><div class="strip">';
+      html+='<div class=\"scard-grid\">';
       shown.forEach(function(f){html+=stripCard(f,rm.key);});
-      if(items.length>15) html+='<div class="scard-all" onclick="showCategory(\''+rm.key+'\')">Show All<br>'+rm.title+' &#8594;</div>';
-      html+='</div>';
-    }
+      if(items.length>15) html+='<div class=\"scard-all\" onclick=\"showCategory(\\''+rm.key+'\\')\">Show All '+rm.title+' &#8594;</div>';
+      html+='</div>';    }
     html+='</div>';
   });
   host.innerHTML=html;
