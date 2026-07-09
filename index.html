@@ -21,7 +21,7 @@ function googleTranslateElementInit(){
   .room-title{color:#1a1108!important;}
 .room-empty{color:rgba(26,17,8,.6)!important;}
 .room-daily{color:rgba(26,17,8,.45)!important;}
-.scard-t{color:#1a1108;}
+.scard-t{color:#1a1108!important;}
 .scard-c{color:rgba(26,17,8,.5)!important;}:root{--ink:#1a1108;--cream:#f5efe4;--warm:#e8dcc8;--gold:#c9973a;--rust:#b84c2b;--sage:#5a7a5e;--blush:#d4917a;--deep:#2c1810;--night:#0f0b07;}
 /* Hide Google Translate toolbar */
 .goog-te-banner-frame,.goog-te-balloon-frame{display:none!important;}
@@ -136,18 +136,14 @@ nav.light .quiet-btn{color:rgba(26,17,8,.5);}
 .strip{display:flex;gap:.8rem;overflow-x:auto;padding-bottom:.9rem;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
 .strip::-webkit-scrollbar{height:5px;}
 .strip::-webkit-scrollbar-thumb{background:rgba(201,151,58,.4);border-radius:3px;}
-.scard-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:start;}
-.scard-grid .scard:nth-child(3n+2){margin-top:40px;}
-.scard{background:#fff;border:0.5px solid rgba(26,17,8,.1);overflow:hidden;cursor:none;}
-.scard-img{height:200px;overflow:hidden;background:#e8e0d0;}
+.scard{flex:0 0 158px;scroll-snap-align:start;cursor:none;}
+.scard-img{height:158px;border-radius:3px;overflow:hidden;background:linear-gradient(150deg,#241a0e,#15100a);border:1px solid rgba(201,151,58,.14);display:flex;align-items:center;justify-content:center;}
 .scard-img img{width:100%;height:100%;object-fit:cover;}
-.scard-body{padding:12px 14px;}
-.scard-country{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#8a7a5a;margin:0 0 3px;}
-.scard-t{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;font-style:italic;color:#1a1108;margin:0 0 8px;line-height:1.2;}
-.scard-row{display:flex;justify-content:space-between;align-items:center;border-top:0.5px solid rgba(26,17,8,.1);padding-top:8px;}
-.scard-c{font-family:'DM Mono',monospace;font-size:8px;color:#8a7a5a;}
-.scard-p{font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:#1a1108;}
-.scard-all{display:flex;align-items:center;justify-content:center;border:1px dashed rgba(201,151,58,.3);padding:1.5rem;color:var(--gold);font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:16px;}.room-empty{border:1px dashed rgba(201,151,58,.22);border-radius:3px;padding:1.8rem 1rem;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(245,239,228,.5);}
+.scard-t{font-family:'Cormorant Garamond',serif;font-size:1.05rem;margin-top:.5rem;line-height:1.2;color:var(--cream);}
+.scard-c{font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,239,228,.45);margin-top:.2rem;}
+.scard-p{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--gold);margin-top:.3rem;}
+.scard-all{flex:0 0 128px;display:flex;align-items:center;justify-content:center;text-align:center;border:1px dashed rgba(201,151,58,.3);border-radius:3px;color:var(--gold);font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;cursor:none;height:158px;}
+.room-empty{border:1px dashed rgba(201,151,58,.22);border-radius:3px;padding:1.8rem 1rem;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(245,239,228,.5);}
 .cat-back{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);cursor:none;display:inline-block;}
 .cat-back:hover{text-decoration:underline;}
 .nav-cta:hover{background:var(--blush);color:var(--cream);}
@@ -1295,7 +1291,7 @@ footer{background:var(--night);padding:4.5rem 3.5rem 2.5rem;border-top:1px solid
 
 <section class="hero-slideshow" id="heroSlideshow">
 
-<div style="position:absolute;inset:0;background:url('https://www.artic.edu/iiif/2/1adf2696-8489-499b-cad2-821d7fde4b33/full/843,/0/default.jpg') center/cover no-repeat;z-index:1;"></div><!-- HERO CONTENT on top of daily image -->
+<div style="position:absolute;inset:0;background:url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/800px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg') center/cover no-repeat;z-index:1;"></div><!-- HERO CONTENT on top of daily image -->
   <div class="hero-content">
     <div class="hero-left">
       <p class="h-eyebrow">✦ Art Has Always Belonged to Everyone</p>
@@ -1308,7 +1304,7 @@ footer{background:var(--night);padding:4.5rem 3.5rem 2.5rem;border-top:1px solid
     </div>
     <div class="hero-right">
       <div class="gallery-mosaic">
-        <div class="gm-cell"><img class="gm-img" src="https://www.artic.edu/iiif/2/1adf2696-8489-499b-cad2-821d7fde4b33/full/843,/0/default.jpg" alt="German Romantic Art"><div class="gm-label"><div class="gm-label-text">Wanderer above the Fog</div><div class="gm-label-loc">Friedrich · Germany</div></div></div>
+        <div class="gm-cell"><img class="gm-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/800px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg" alt="German Romantic Art"><div class="gm-label"><div class="gm-label-text">Wanderer above the Fog</div><div class="gm-label-loc">Friedrich · Germany</div></div></div>
         <div class="gm-cell"><img class="gm-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1280px-Taj_Mahal_%28Edited%29.jpeg" alt="Taj Mahal India"><div class="gm-label"><div class="gm-label-text">The Taj Mahal</div><div class="gm-label-loc">Agra, India</div></div></div>
         <div class="gm-cell"><img class="gm-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/The_Parthenon_in_Athens.jpg/1280px-The_Parthenon_in_Athens.jpg" alt="Parthenon Greece"><div class="gm-label"><div class="gm-label-text">The Parthenon</div><div class="gm-label-loc">Athens, Greece</div></div></div>
         <div class="gm-cell"><img class="gm-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/All_Gizah_Pyramids.jpg/1280px-All_Gizah_Pyramids.jpg" alt="Pyramids Egypt"><div class="gm-label"><div class="gm-label-text">Pyramids of Giza</div><div class="gm-label-loc">Egypt · c. 2560 BCE</div></div></div>
@@ -1330,7 +1326,7 @@ footer{background:var(--night);padding:4.5rem 3.5rem 2.5rem;border-top:1px solid
   <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w;s.onload=v;s.onerror=v;d.body.appendChild(s);}</script>
 </section>
 
-<section class="daily-quote"><p class="dq-label">✦ Daily Inspiration ✦</p><div class="dq-text" id="dqText"></div><p class="dq-author" id="dqAuthor"></p><div class="dq-nav" id="dqNav"></div></section>
+<section class="daily-quote">p class="dq-label">✦ Daily Inspiration ✦</p><div class="dq-text" id="dqText"></div><p class="dq-author" id="dqAuthor"></p><div class="dq-nav" id="dqNav"></div></section>
 
 <div class="home-pillars">
   <div class="pillar-block shop-p" onclick="showPage('shop')"><div class="p-num">01</div><div class="p-icon">🛍️</div><h2 class="p-title">Shop Art<br>from <em>Every Country</em></h2><p class="p-desc">Paintings, crafts, ceramics, clothing — made by hand, made with heart. Each piece ships worldwide from the creator who made it.</p><div class="p-arrow">Browse the Marketplace →</div></div>
@@ -3044,7 +3040,7 @@ var dailyArtworks=[
   {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1280px-Taj_Mahal_%28Edited%29.jpeg',title:'The Taj Mahal — Shah Jahan',origin:'1632 · Mughal Empire · Agra, India'},
   {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/All_Gizah_Pyramids.jpg/1280px-All_Gizah_Pyramids.jpg',title:'The Pyramids of Giza',origin:'c. 2560 BCE · Ancient Egypt'},
   {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Sandro_Botticelli_046.jpg/1280px-Sandro_Botticelli_046.jpg',title:'The Birth of Venus — Botticelli',origin:'c. 1484 · Florence, Italy · Uffizi Gallery'},
-  {url:'https://www.artic.edu/iiif/2/1adf2696-8489-499b-cad2-821d7fde4b33/full/843,/0/default.jpg',title:'Wanderer above the Sea of Fog — Friedrich',origin:'c. 1818 · German Romanticism · Hamburg'},
+  {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/800px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg',title:'Wanderer above the Sea of Fog — Friedrich',origin:'c. 1818 · German Romanticism · Hamburg'},
   {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/20090529-great-wall-edit.jpg/1280px-20090529-great-wall-edit.jpg',title:'The Great Wall of China',origin:'7th Century BCE · China'},
   {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Teotihuac%C3%A1n%2C_M%C3%A9xico%2C_2013-10-13%2C_DD_02.jpg/1280px-Teotihuac%C3%A1n%2C_M%C3%A9xico%2C_2013-10-13%2C_DD_02.jpg',title:'Pyramid of the Sun — Teotihuacan',origin:'c. 100 CE · Mesoamerica · Mexico'},
   {url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/800px-1665_Girl_with_a_Pearl_Earring.jpg',title:'Girl with a Pearl Earring — Vermeer',origin:'c. 1665 · Netherlands · Mauritshuis'},
@@ -3322,7 +3318,8 @@ function stripCard(f,key){
   var title=f.Title||'Untitled',creator=f.Creator||'Creator',loc=[f.City,f.Country].filter(Boolean).join(', ');
   var price=f.Price?'$'+f.Price:'POA';
   var img=f.Image?'<img src="'+f.Image+'" alt="">':PAINT_ICON;
-  return '<div class=\"scard\" onclick=\"showCategory(\\''+key+'\\')\"><div class=\"scard-img\">'+img+'</div><div class=\"scard-body\"><p class=\"scard-country\">'+(f.Country||'')+(f.Category?' \u00b7 '+f.Category:'')+'</p><p class=\"scard-t\">'+title+'</p><div class=\"scard-row\"><span class=\"scard-c\">'+creator+'</span><span class=\"scard-p\">'+price+'</span></div></div></div>';}
+  return '<div class="scard" onclick="showCategory(\''+key+'\')"><div class="scard-img">'+img+'</div><div class="scard-t">'+title+'</div><div class="scard-c">'+creator+(loc?' \u00b7 '+loc:'')+'</div><div class="scard-p">'+price+'</div></div>';
+}
 function fullCard(f){
   var title=f.Title||'Untitled',creator=f.Creator||'Creator',city=f.City||'',country=f.Country||'';
   var price=f.Price?'$'+f.Price:'POA',badge=f.Badge||'New',image=f.Image||'';
@@ -3352,10 +3349,11 @@ function renderRooms(){
       html+='<div class="room-empty">The first '+rm.title.toLowerCase()+' piece is coming at launch.<br>Founding creators joining now.</div>';
     } else {
       var shown=dailyShuffle(items).slice(0,15);
-      html+='<div class=\"scard-grid\">';
+      html+='<div class="room-daily">\u21bb '+(items.length>15?'15 today \u00b7 reshuffles every 24 hours \u00b7 ':'')+'swipe \u2192</div><div class="strip">';
       shown.forEach(function(f){html+=stripCard(f,rm.key);});
-      if(items.length>15) html+='<div class=\"scard-all\" onclick=\"showCategory(\\''+rm.key+'\\')\">Show All '+rm.title+' &#8594;</div>';
-      html+='</div>';    }
+      if(items.length>15) html+='<div class="scard-all" onclick="showCategory(\''+rm.key+'\')">Show All<br>'+rm.title+' &#8594;</div>';
+      html+='</div>';
+    }
     html+='</div>';
   });
   host.innerHTML=html;
