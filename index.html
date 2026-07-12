@@ -3001,8 +3001,7 @@ function counterOffer(btn){
   inp.style.cssText='flex:1;font-size:.8rem;padding:.5rem .7rem;background:rgba(245,239,228,.07);border:1px solid rgba(245,239,228,.2);color:var(--cream);outline:none;';
   var sendBtn=document.createElement('button');
   sendBtn.textContent='Send';
-  sendBtn.style.cssText='font-size:.6rem;background:var(--gold);color:var(--ink);padding:.5rem .8rem;border:none;cursor:pointer;';
-  sendBtn.onclick=function(){sendCounter(sendBtn);};
+  sendBtn.style.cssText='font-size:.6rem;background:var(--gold);color:var(--ink);padding:.5rem .8rem;border:none;cursor:none;';  sendBtn.onclick=function(){sendCounter(sendBtn);};
   wrapper.appendChild(inp);
   wrapper.appendChild(sendBtn);
   actions.innerHTML='';
