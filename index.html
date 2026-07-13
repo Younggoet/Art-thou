@@ -3338,7 +3338,31 @@ function fullCard(f){
     '<button class="listing-btn at-buy-btn">Buy Now</button></div></div></div></div>';
 }
 
+function renderHomeShopPreview(){
+  var host=document.getElementById('homeShopRooms'); if(!host) return;
+  var html='';
+  SHOP_ROOMS.forEach(function(rm){
+    var items=ROOM_DATA[rm.key]||[];
+    html+='<div class="room"><div class="room-head"><div><span class="room-title">'+rm.title+'</span></div>';
+    if(items.length) html+='<button class="room-showall" onclick="showCategory(\''+rm.key+'\')">Show All &#8594;</button>';
+    html+='</div>';
+    if(!items.length){
+      html+='<div class="room-empty">The first '+rm.title.toLowerCase()+' piece is coming at launch.<br>Founding creators joining now.</div>';
+    } else {
+      var shown=dailyShuffle(items).slice(0,6);
+      html+='<div class="strip">';
+      shown.forEach(function(f){html+=stripCard(f,rm.key);});
+      html+='</div>';
+    }
+    html+='</div>';
+  });
+  host.innerHTML=html;
+  if(typeof triggerReveals==='function') setTimeout(triggerReveals,60);
+}
+
 function renderRooms(){
+
+
   var host=document.getElementById('shopRooms'); if(!host) return;
   var html='';
   SHOP_ROOMS.forEach(function(rm){
