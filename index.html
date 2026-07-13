@@ -3381,11 +3381,14 @@ function renderRooms(){
     }
     html+='</div>';
   });
-  host.innerHTML=html;
-  if(typeof triggerReveals==='function') setTimeout(triggerReveals,60);
+  
+  host.innerHTML=html; 
+  renderHomeShopPreview();  if(typeof triggerReveals==='function') setTimeout(triggerReveals,60);
 }
 
 function showCategory(key){
+
+
   var rm=null; SHOP_ROOMS.forEach(function(r){if(r.key===key)rm=r;}); if(!rm) return;
   var items=ROOM_DATA[key]||[];
   var t=document.getElementById('catPageTitle'); if(t) t.textContent=rm.title;
