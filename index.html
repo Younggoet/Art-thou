@@ -1420,14 +1420,33 @@ footer{background:var(--night);padding:4.5rem 3.5rem 2.5rem;border-top:1px solid
     </div>
   </section>
 
-  <section class="shop-rooms">
-    <div class="section-header reveal" style="margin-bottom:1.5rem;">
-      <div><h2 class="section-title">Browse by<br><em>Category</em></h2></div>
-      <div class="at-count" id="listingCount"></div>
-    </div>
-    <div id="shopRooms"></div>
-  </section>
-
+ <section class="shop-rooms">
+        <div class="section-header reveal" style="margin-bottom:1.5rem;">
+          <div><h2 class="section-title">Browse by<br><em>Category</em></h2></div>
+          <div class="at-count" id="listingCount"></div>
+        </div>
+        <button class="narrow-toggle" onclick="document.querySelector('.shop-sidebar').classList.toggle('hidden')">Narrow the view</button>
+        <div class="shop-layout">
+          <div class="shop-sidebar">
+            <input class="shop-search" type="text" placeholder="Search by title or creator..." id="shopSearchInput">
+            <div class="filter-group">
+              <div class="filter-head"><span class="filter-label">Medium</span><span class="filter-chevron">▾</span></div>
+              <div class="filter-options" id="mediumFilterOptions"></div>
+            </div>
+            <div class="filter-group">
+              <div class="filter-head"><span class="filter-label">Budget</span><span class="filter-chevron">▾</span></div>
+              <div class="filter-options">All prices</div>
+            </div>
+            <div class="filter-group">
+              <div class="filter-head"><span class="filter-label">Arrange by</span><span class="filter-chevron">▾</span></div>
+              <div class="filter-options">Creator, A - Z<br>Newest arrivals</div>
+            </div>
+          </div>
+          <div class="shop-main">
+            <div id="shopRooms"></div>
+          </div>
+        </div>
+      </section>
   <section class="shipping-section">
     <div class="section-header reveal">
       <div>
