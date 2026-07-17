@@ -3373,8 +3373,10 @@ function fullCard(f){
     (commHtml?'<div style="margin:.3rem 0 .1rem;">'+commHtml+'</div>':'')+
     '<div class="listing-foot"><div class="listing-price">'+price+'</div>'+
     '<div style="display:flex;gap:.5rem;"><button class="offer-btn at-offer-btn" data-title="'+title.replace(/"/g,'&quot;')+'" data-creator="'+creator+(city?' &middot; '+city:'')+'" data-price="'+(f.Price||0)+'">Make Offer</button>'+
-    '<button class="listing-btn at-buy-btn">Buy Now</button></div></div></div></div>';
-}
+    '<button class="listing-btn at-buy-btn">Buy Now</button></div>'+
+'<div class="listing-social" data-listing-id="'+f.id+'"><button class="like-btn" onclick="toggleLike(\''+f.id+'\')"><span class="like-icon">♡</span> <span class="like-count">0</span></button><button class="comment-toggle-btn" onclick="toggleComments(\''+f.id+'\')">💬 <span class="comment-count">0</span></button></div>'+
+'<div class="comments-section" id="comments-'+f.id+'" style="display:none;"></div>'+
+'</div></div></div>';}
 
 function renderHomeShopPreview(){
   var host=document.getElementById('homeShopRooms'); if(!host) return;
