@@ -3317,8 +3317,7 @@ function loadListings(){
     ROOM_DATA={}; var total=0;
     if(d.records&&d.records.length){
       d.records.forEach(function(rec){
-        var f=rec.fields; var k=normCat(f.Category); if(!k) return;
-        (ROOM_DATA[k]=ROOM_DATA[k]||[]).push(f); total++;
+        var f=rec.fields; f.id=rec.id; var k=normCat(f.Category); if(!k) return;        (ROOM_DATA[k]=ROOM_DATA[k]||[]).push(f); total++;
       });
     }
     renderRooms();
