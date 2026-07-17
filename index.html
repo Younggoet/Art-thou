@@ -3338,8 +3338,10 @@ var SHOP_ROOMS=[
 var ROOM_DATA={};
 var PAINT_ICON='<svg viewBox="0 0 64 64" width="60" height="60" fill="none" stroke="#c9973a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="opacity:.4"><rect x="9" y="11" width="46" height="42" rx="2"/><circle cx="23" cy="25" r="4.5"/><path d="M13 49l12-15 8 9 6-6 12 12"/></svg>';
 
-function normCat(c){
-  c=(c||'').toString().toLowerCase();
+/* ===== SUPABASE (likes & comments) ===== */
+var sb = supabase.createClient('https://xqlwptlzbmilpnspzzug.supabase.co','sb_publishable_Q8XJvwknmizRwB6W2i78vg_VzeklQy-');
+
+function normCat(c){  c=(c||'').toString().toLowerCase();
   if(c.indexOf('paint')>-1||c.indexOf('wall')>-1) return 'paintings';
   if(c.indexOf('jewel')>-1) return 'jewelry';
   if(c.indexOf('cloth')>-1||c.indexOf('textile')>-1||c.indexOf('wear')>-1||c.indexOf('fabric')>-1) return 'clothing';
