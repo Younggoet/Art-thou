@@ -3458,8 +3458,7 @@ function renderHomeShopPreview(){
     }
     html+='</div>';
   });
-  host.innerHTML=html;
-  if(typeof triggerReveals==='function') setTimeout(triggerReveals,60);
+  host.innerHTML=html;document.querySelectorAll('.listing-social').forEach(function(el){refreshLikeUI(el.dataset.listingId); });if(typeof triggerReveals==='function') setTimeout(triggerReveals,60);
 }
 
 function renderRooms(){
