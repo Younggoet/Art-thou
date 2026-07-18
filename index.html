@@ -3341,6 +3341,68 @@ var PAINT_ICON='<svg viewBox="0 0 64 64" width="60" height="60" fill="none" stro
 /* ===== SUPABASE (likes & comments) ===== */
 var sb = supabase.createClient('https://xqlwptlzbmilpnspzzug.supabase.co','sb_publishable_Q8XJvwknmizRwB6W2i78vg_VzeklQy-');
 
+function getVisitorId(){  var vid = localStorage.getItem('at_visitor_id');
+  if(!vid){ vid = 'v_'+Math.random().toString(36).slice(2)+Date.now(); localStorage.setItem('at_visitor_id', vid); }
+  return vid;
+}
+
+async function refreshLikeUI(itemId){
+  var el = document.querySelector('.listing-social[data-listing-id="'+itemId+'"]');
+  if(!el) return;
+  var countEl = el.querySelector('.like-count');
+  var iconEl = el.querySelector('.like-icon');
+  var {data} = await sb.from('likes').select('visitor_id').eq('item_id', itemId);
+  var count = data ? data.length : 0;
+  if(countEl) countEl.textContent = count;
+  var mine = data && data.some(function(r){return r.visitor_id === getVisitorId();});
+  if(iconEl) iconEl.textContent = mine ? '♥' : '♡';
+}
+
+async function toggleLike(itemId){
+  var vid = getVisitorId();
+  var {data} = await sb.from('likes').select('*').eq('item_id', itemId).eq('visitor_id', vid);
+  if(data && data.length){
+    await sb.from('likes').delete().eq('item_id', itemId).eq('visitor_id', vid);
+  } else {
+    await sb.from('likes').insert({item_id: itemId, visitor_id: vid});
+  }
+  refreshLikeUI(itemId);
+}
+
+async function refreshComments(itemId){
+  var host = document.getElementById('comments-'+itemId);
+  if(!host) return;
+  var {data} = await sb.from('comments').select('*').eq('item_id', itemId).order('id', {ascending:true});
+  var countEl = document.querySelector('.listing-social[data-listing-id="'+itemId+'"] .comment-count');
+  if(countEl) countEl.textContent = data ? data.length : 0;
+  var html = '<div class="comments-list">';
+  (data||[]).forEach(function(c){
+    html += '<div class="comment-item"><span class="comment-name">'+(c.name||'Anonymous')+'</span><span class="comment-body">'+(c.body||'')+'</span></div>';
+  });
+  html += '</div>';
+  html += '<div class="comment-form"><input type="text" class="comment-name-input" placeholder="Your name" id="cname-'+itemId+'"><textarea class="comment-body-input" placeholder="Add a comment..." id="cbody-'+itemId+'"></textarea><button class="comment-submit-btn" onclick="submitComment(\''+itemId+'\')">Post</button></div>';
+  host.innerHTML = html;
+}
+
+function toggleComments(itemId){
+  var host = document.getElementById('comments-'+itemId);
+  if(!host) return;
+  var show = host.style.display === 'none';
+  host.style.display = show ? 'block' : 'none';
+  if(show) refreshComments(itemId);
+}
+
+async function submitComment(itemId){
+  var nameEl = document.getElementById('cname-'+itemId);
+  var bodyEl = document.getElementById('cbody-'+itemId);
+  var name = (nameEl.value||'').trim();
+  var body = (bodyEl.value||'').trim();
+  if(!body) return;
+  await sb.from('comments').insert({item_id: itemId, name: name||'Anonymous', body: body});
+  nameEl.value=''; bodyEl.value='';
+  refreshComments(itemId);
+}
+
 function normCat(c){  c=(c||'').toString().toLowerCase();
   if(c.indexOf('paint')>-1||c.indexOf('wall')>-1) return 'paintings';
   if(c.indexOf('jewel')>-1) return 'jewelry';
