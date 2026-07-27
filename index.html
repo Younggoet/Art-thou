@@ -3335,10 +3335,13 @@ function signUpArtLover(){
   if(!email || !pw){ alert('Enter an email and password.'); return; }
   sb.auth.signUp({email:email, password:pw}).then(function(res){
     if(res.error){ alert(res.error.message); return; }
+    var uid = res.data.user ? res.data.user.id : null;
+    if(uid){
+      sb.from('profiles').insert({id:uid, email:email, display_name:email.split('@')[0]}).then(function(){});
+    }
     alert('Check your email to confirm your account, then log in below.');
   });
 }
-
 function logInArtLover(){
   var email = document.getElementById('loginEmail').value;
   var pw = document.getElementById('loginPassword').value;
