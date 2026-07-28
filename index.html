@@ -3252,8 +3252,9 @@ function initNavDropdowns(){
 
 /* ===== INIT ALL ON DOM READY ===== */
 document.addEventListener('DOMContentLoaded', function(){
- window.renderRooms=renderRooms; window.showCategory=showCategory; window.jumpRoom=jumpRoom; window.normCat=normCat; window.ROOM_DATA=ROOM_DATA; window.SHOP_ROOMS=SHOP_ROOMS; window.searchShop=searchShop; window.clearShopSearch=clearShopSearch; window.signUpArtLover=signUpArtLover; window.logInArtLover=logInArtLover; window.toggleLike=toggleLike; window.toggleComments=toggleComments; window.submitComment=submitComment;window.startConversation=startConversation; window.loadConversations=loadConversations; window.openConversation=openConversation;console.log("Art Thou build: rooms-v3");  initCursor();
-  initLang();
+ window.renderRooms=renderRooms; window.showCategory=showCategory; window.jumpRoom=jumpRoom; window.normCat=normCat; window.ROOM_DATA=ROOM_DATA; window.SHOP_ROOMS=SHOP_ROOMS; window.searchShop=searchShop; window.clearShopSearch=clearShopSearch; window.signUpArtLover=signUpArtLover; window.logInArtLover=logInArtLover; window.toggleLike=toggleLike; window.toggleComments=toggleComments; window.submitComment=submitComment;window.startConversation=startConversation; window.loadConversations=loadConversations; window.openConversation=openConversation;console.log("Art Thou build: rooms-v3");  initCursor(); 
+  var msgSendBtnEl=document.getElementById('msgSendBtn'); if(msgSendBtnEl) msgSendBtnEl.addEventListener('click', sendMsg);
+  var msgInputEl=document.getElementById('msgInput'); if(msgInputEl) msgInputEl.addEventListener('keypress', function(e){ if(e.key==='Enter') sendMsg(); });  initLang();
   initNavDropdowns();
   initLearnCats();
   triggerReveals();
