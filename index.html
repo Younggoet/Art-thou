@@ -3345,8 +3345,7 @@ function logInArtLover(){
   if(!email || !pw){ alert('Enter an email and password.'); return; }
   sb.auth.signInWithPassword({email:email, password:pw}).then(function(res){
     if(res.error){ alert(res.error.message); return; }
-    currentUser = res.data.user;
-    showPage('msg');
+    currentUser = res.data.user; window.currentUser = currentUser;    showPage('msg');
   });
 }
 
