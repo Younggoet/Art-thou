@@ -2680,8 +2680,8 @@ function showPage(id){
   document.querySelectorAll('.pledge-section,.weekly-question,.daily-quote').forEach(function(el){ el.style.display = (id==='home') ? '' : 'none'; });if(id==='msg' && (typeof window.currentUser==='undefined' || !window.currentUser)){ id = 'login'; }if(typeof closeMobileMenu==='function')closeMobileMenu();
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   var pg = document.getElementById(id);
-  if(pg) pg.classList.add('active');
-  document.querySelectorAll('.mode-tab').forEach(function(t){t.classList.remove('active');});
+ if(pg) pg.classList.add('active');
+  if(id==='msg' && typeof window.loadConversations==='function') window.loadConversations();  document.querySelectorAll('.mode-tab').forEach(function(t){t.classList.remove('active');});
   var tab = document.getElementById('tab-'+id);
   if(tab) tab.classList.add('active');
   var nav = document.getElementById('navbar');
