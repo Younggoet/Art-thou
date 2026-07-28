@@ -3362,7 +3362,154 @@ function logInArtLover(){
   });
 }
 
-function getVisitorId(){  var vid = localStorage.getItem('at_visitor_id');
+var msgPollInterval = null;
+var msgActiveConvo = null;
+var msgActiveOther = null;
+var msgLastCount = -1;
+var msgProfileCache = {};
+
+function msgGetSiteLang(){
+  var m = document.cookie.match(/googtrans=\/[a-zA-Z-]*\/([a-zA-Z-]+)/);
+  return m ? m[1] : 'en';
+}
+
+function msgGetProfileName(uid){
+  if(msgProfileCache[uid]) return Promise.resolve(msgProfileCache[uid]);
+  return sb.from('profiles').select('display_name').eq('id', uid).single().then(function(res){
+    var name = (res.data && res.data.display_name) ? res.data.display_name : 'Art Lover';
+    msgProfileCache[uid] = name;
+    return name;
+  }).catch(function(){ return 'Art Lover'; });
+}
+
+function loadConversations(){
+  if(!window.currentUser) return;
+  var myId = window.currentUser.id;
+  sb.from('conversations').select('*').or('user_a.eq.'+myId+',user_b.eq.'+myId).then(function(res){
+    var list = document.getElementById('msgConvoItems');
+    var empty = document.getElementById('msgConvoEmpty');
+    if(!list) return;
+    list.innerHTML = '';
+    var rows = (res.data || []).slice().sort(function(a,b){ return new Date(b.created_at) - new Date(a.created_at); });
+    if(!rows.length){ if(empty) empty.style.display='block'; return; }
+    if(empty) empty.style.display='none';
+    rows.forEach(function(convo){
+      var otherId = convo.user_a === myId ? convo.user_b : convo.user_a;
+      var item = document.createElement('div');
+      item.style.cssText = 'padding:.7rem .5rem;cursor:pointer;border-radius:4px;font-family:"Cormorant Garamond",serif;color:var(--ink);border-bottom:1px solid rgba(201,151,58,.12);';
+      item.textContent = 'Loading…';
+      item.addEventListener('click', function(){ openConversation(convo.id, otherId); });
+      list.appendChild(item);
+      msgGetProfileName(otherId).then(function(name){ item.textContent = name; });
+    });
+  });
+}
+
+function openConversation(convoId, otherId){
+  msgActiveConvo = convoId;
+  msgActiveOther = otherId;
+  msgLastCount = -1;
+  document.getElementById('msgThreadEmpty').style.display = 'none';
+  var active = document.getElementById('msgThreadActive');
+  active.style.display = 'flex';
+  msgGetProfileName(otherId).then(function(name){
+    document.getElementById('msgThreadHeader').textContent = name;
+  });
+  loadMessages();
+  if(msgPollInterval) clearInterval(msgPollInterval);
+  msgPollInterval = setInterval(function(){
+    var msgPage = document.getElementById('msg');
+    if(!msgPage || !msgPage.classList.contains('active')){ clearInterval(msgPollInterval); return; }
+    loadMessages();
+  }, 4000);
+}
+
+function loadMessages(){
+  if(!msgActiveConvo) return;
+  sb.from('messages').select('*').eq('conversation_id', msgActiveConvo).then(function(res){
+    var rows = (res.data || []).slice().sort(function(a,b){ return new Date(a.created_at) - new Date(b.created_at); });
+    if(rows.length === msgLastCount) return;
+    msgLastCount = rows.length;
+    var body = document.getElementById('msgThreadBody');
+    if(!body) return;
+    body.innerHTML = '';
+    rows.forEach(function(m){ body.appendChild(msgBuildBubble(m)); });
+    body.scrollTop = body.scrollHeight;
+  });
+}
+
+function msgBuildBubble(m){
+  var mine = window.currentUser && m.sender_id === window.currentUser.id;
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'max-width:75%;align-self:'+(mine ? 'flex-end' : 'flex-start')+';';
+  var bubble = document.createElement('div');
+  bubble.style.cssText = 'background:'+(mine ? 'var(--gold)' : 'rgba(201,151,58,.12)')+';color:var(--ink);padding:.6rem .9rem;border-radius:10px;font-family:"Cormorant Garamond",serif;font-size:1rem;';
+  var original = document.createElement('div');
+  original.textContent = m.body;
+  bubble.appendChild(original);
+  var translateBtn = document.createElement('button');
+  translateBtn.textContent = 'Translate';
+  translateBtn.style.cssText = 'margin-top:.3rem;font-size:.7rem;background:none;border:none;color:rgba(26,17,8,.5);text-decoration:underline;cursor:pointer;padding:0;';
+  var translated = false;
+  translateBtn.addEventListener('click', function(){
+    if(!translated){
+      msgTranslateText(m.body).then(function(t){
+        if(!t) return;
+        var small = document.createElement('div');
+        small.style.cssText = 'font-size:.75rem;opacity:.6;margin-bottom:.2rem;';
+        small.textContent = m.body;
+        bubble.insertBefore(small, original);
+        original.textContent = t;
+        translateBtn.textContent = 'Show original';
+        translated = true;
+      });
+    } else {
+      var kids = bubble.querySelectorAll('div');
+      if(kids.length > 1) kids[0].remove();
+      original.textContent = m.body;
+      translateBtn.textContent = 'Translate';
+      translated = false;
+    }
+  });
+  bubble.appendChild(translateBtn);
+  wrap.appendChild(bubble);
+  return wrap;
+}
+
+function msgTranslateText(text){
+  var target = msgGetSiteLang();
+  return fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl='+target+'&dt=t&q='+encodeURIComponent(text))
+    .then(function(r){ return r.json(); })
+    .then(function(data){ return data[0].map(function(p){ return p[0]; }).join(''); })
+    .catch(function(){ return null; });
+}
+
+function sendMsg(){
+  var input = document.getElementById('msgInput');
+  if(!input || !msgActiveConvo || !window.currentUser) return;
+  var text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  sb.from('messages').insert({conversation_id: msgActiveConvo, sender_id: window.currentUser.id, body: text}).then(function(){
+    loadMessages();
+  });
+}
+
+function startConversation(otherUserId){
+  if(!window.currentUser) return;
+  var myId = window.currentUser.id;
+  sb.from('conversations').select('*').or('user_a.eq.'+myId+',user_b.eq.'+myId).then(function(res){
+    var existing = (res.data || []).find(function(c){
+      return (c.user_a === myId && c.user_b === otherUserId) || (c.user_a === otherUserId && c.user_b === myId);
+    });
+    if(existing){ showPage('msg'); setTimeout(function(){ openConversation(existing.id, otherUserId); }, 50); return; }
+    sb.from('conversations').insert({user_a: myId, user_b: otherUserId}).select().then(function(res2){
+      var convo = res2.data && res2.data[0];
+      showPage('msg');
+      if(convo) setTimeout(function(){ openConversation(convo.id, otherUserId); }, 50);
+    });
+  });
+}function getVisitorId(){  var vid = localStorage.getItem('at_visitor_id');
   if(!vid){ vid = 'v_'+Math.random().toString(36).slice(2)+Date.now(); localStorage.setItem('at_visitor_id', vid); }
   return vid;
 }
