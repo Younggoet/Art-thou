@@ -3325,8 +3325,7 @@ var PAINT_ICON='<svg viewBox="0 0 64 64" width="60" height="60" fill="none" stro
 
 /* ===== SUPABASE (likes & comments) ===== */
 var sb = supabase.createClient('https://xqlwptlzbmilpnspzzug.supabase.co','sb_publishable_Q8XJvwknmizRwB6W2i78vg_VzeklQy-');
-var currentUser = null;sb.auth.getSession().then(function(res){ currentUser = res.data.session ? res.data.session.user : null; });
-sb.auth.onAuthStateChange(function(event, session){ currentUser = session ? session.user : null; });
+var currentUser = null;sb.auth.getSession().then(function(res){ currentUser = res.data.session ? res.data.session.user : null; window.currentUser = currentUser; });sb.auth.onAuthStateChange(function(event, session){ currentUser = session ? session.user : null; });
 
 function signUpArtLover(){
   var email = document.getElementById('loginEmail').value;
