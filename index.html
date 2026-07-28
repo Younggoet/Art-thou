@@ -2626,12 +2626,25 @@ I paint with acrylic on large canvas, working in layers over weeks. Every piece 
     <button onclick="signUpArtLover()" style="width:100%;padding:.9rem;background:transparent;color:var(--ink);border:1px solid var(--ink);border-radius:4px;font-family:'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;font-size:.85rem;cursor:pointer;">Create Account</button>
   </div>
 </div>
-
 <!-- ===== MSG PAGE ===== -->
 <div id="msg" class="page">
-  <div style="max-width:600px;margin:5rem auto;padding:2rem;text-align:center;">
-    <h2 style="font-family:'Cinzel',serif;color:var(--ink);font-size:1.6rem;letter-spacing:.05em;margin-bottom:1rem;">Your Messages</h2>
-    <p style="font-family:'Cormorant Garamond',serif;color:rgba(26,17,8,.6);font-style:italic;">No conversations yet. Once you message a creator, it'll show up here.</p>
+  <div id="msgWrap" style="max-width:960px;margin:3rem auto;padding:0 1.5rem;display:flex;gap:2rem;min-height:55vh;">
+    <div id="msgConvoList" style="flex:0 0 260px;border-right:1px solid rgba(201,151,58,.25);padding-right:1.5rem;">
+      <h2 style="font-family:'Cinzel',serif;color:var(--ink);font-size:1.3rem;letter-spacing:.05em;margin-bottom:1.2rem;">Your Messages</h2>
+      <div id="msgConvoItems"></div>
+      <p id="msgConvoEmpty" style="font-family:'Cormorant Garamond',serif;color:rgba(26,17,8,.55);font-style:italic;font-size:.95rem;">No conversations yet. Once you message a creator, it'll show up here.</p>
+    </div>
+    <div id="msgThreadPane" style="flex:1;display:flex;flex-direction:column;">
+      <div id="msgThreadEmpty" style="margin:auto;text-align:center;color:rgba(26,17,8,.5);font-family:'Cormorant Garamond',serif;font-style:italic;">Select a conversation to view messages.</div>
+      <div id="msgThreadActive" style="display:none;flex-direction:column;flex:1;">
+        <div id="msgThreadHeader" style="font-family:'Cinzel',serif;color:var(--ink);font-size:1.1rem;padding-bottom:.8rem;border-bottom:1px solid rgba(201,151,58,.25);margin-bottom:1rem;"></div>
+        <div id="msgThreadBody" style="flex:1;overflow-y:auto;max-height:48vh;display:flex;flex-direction:column;gap:.7rem;padding-right:.5rem;"></div>
+        <div style="display:flex;gap:.6rem;margin-top:1rem;">
+          <input id="msgInput" type="text" placeholder="Type a message…" style="flex:1;padding:.7rem 1rem;border:1px solid rgba(201,151,58,.35);border-radius:4px;font-family:'Cormorant Garamond',serif;font-size:1rem;">
+          <button id="msgSendBtn" style="padding:.7rem 1.4rem;background:var(--gold);color:var(--ink);border:none;border-radius:4px;font-family:'Cinzel',serif;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;cursor:pointer;">Send</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div><script>
 /* ===== CURSOR ===== */
