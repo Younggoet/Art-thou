@@ -3870,12 +3870,9 @@ function acPointerDown(e){
     acStrokeCtx.fillStyle=color;
     acStrokeCtx.globalAlpha=1;
     acStrokeCtx.fill();
-  }
-  acCompositeStroke();
-}  acCompositeStroke();
-}
-
-function acCurrentSize(){ return parseInt(document.getElementById('acBrushSize').value,10) || 5; }
+  
+acCompositeStroke();
+} function acCurrentSize(){ return parseInt(document.getElementById('acBrushSize').value,10) || 5; }
 function acCurrentOpacity(){ return (parseInt(document.getElementById('acOpacity').value,10)||100)/100; }
 
 function acPointerMove(e){
