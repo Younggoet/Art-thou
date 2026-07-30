@@ -3826,8 +3826,15 @@ function acCompositeStroke(){
   acCtx.restore();
 }
 function acPointerDown(e){
-  acDrawing=true;
   var pos=acGetPos(e);
+
+  if(acEyedropperArmed){
+    acEyedropperSample(pos.x, pos.y);
+    acEyedropperArmed = false;
+    return;
+  }
+
+  acDrawing=true;
   acLastX=pos.x; acLastY=pos.y;
   acSmoothX=pos.x; acSmoothY=pos.y;
 
@@ -3866,6 +3873,7 @@ function acPointerDown(e){
     acStrokeCtx.fill();
   }
   acCompositeStroke();
+}  acCompositeStroke();
 }
 
 function acCurrentSize(){ return parseInt(document.getElementById('acBrushSize').value,10) || 5; }
