@@ -3677,8 +3677,8 @@ function acInitCanvas(){
   });
 
   acCanvas.addEventListener('pointerdown', acPointerDown);
-  acCanvas.addEventListener('pointermove', acPointerMove);
-  window.addEventListener('pointerup', acPointerUp);
+  acCanvas.addEventListener('pointermove', acPointerMove); 
+  acCanvas.addEventListener('pointerleave', function(){ var c=document.getElementById('acBrushCursor'); if(c) c.style.display='none'; });  window.addEventListener('pointerup', acPointerUp);
   window.addEventListener('pointercancel', acPointerUp);
 
   document.getElementById('acEraserBtn').addEventListener('click', function(){
