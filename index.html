@@ -2697,11 +2697,19 @@ I paint with acrylic on large canvas, working in layers over weeks. Every piece 
   </div>
 
   <!-- SKETCHPAD VIEW -->
-  <div id="acSketch" style="display:none;max-width:1100px;margin:1.5rem auto;padding:0 1.5rem;">
+  <div id="acSketch" style="display:none;max-width:100%;margin:0;padding:2.5rem 1.5rem;min-height:100vh;box-sizing:border-box;background:radial-gradient(1.5px 1.5px at 20px 30px,rgba(255,255,255,.9),transparent),radial-gradient(1.5px 1.5px at 140px 80px,rgba(255,255,255,.7),transparent),radial-gradient(1px 1px at 90px 40px,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 60px 110px,rgba(255,255,255,.5),transparent),radial-gradient(1.5px 1.5px at 200px 150px,rgba(255,255,255,.8),transparent),radial-gradient(1px 1px at 170px 20px,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 30px 170px,rgba(255,255,255,.6),transparent),linear-gradient(180deg,#0a0e2a,#141b3d 55%,#1c2550);background-repeat:repeat;background-size:240px 220px,240px 220px,240px 220px,240px 220px,240px 220px,240px 220px,240px 220px,100% 100%;">
+  <div style="max-width:1100px;margin:0 auto;">
     <div id="acBackFromSketch" style="cursor:pointer;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;">← Back</div>
-    <p id="acPromptText" style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(26,17,8,.65);font-size:1.15rem;text-align:center;margin-bottom:1.2rem;"></p>
+    <p id="acPromptText" style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(245,239,228,.85);font-size:1.15rem;text-align:center;margin-bottom:1.2rem;"></p>
 
     <div style="display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;justify-content:center;margin-bottom:1rem;padding:.8rem;background:rgba(201,151,58,.08);border-radius:6px;">
+      <select id="acBrushType" style="padding:.5rem .7rem;border:1px solid rgba(201,151,58,.4);border-radius:4px;font-family:'DM Mono',monospace;font-size:.7rem;text-transform:uppercase;background:#fff;cursor:pointer;">
+        <option value="pencil">Pencil</option>
+        <option value="ink">Ink Pen</option>
+        <option value="marker">Marker</option>
+        <option value="watercolor">Watercolor</option>
+        <option value="airbrush">Airbrush</option>
+      </select>
       <input id="acColorPicker" type="color" value="#1a1108" style="width:36px;height:36px;border:none;border-radius:4px;cursor:pointer;padding:0;">
       <div id="acSwatches" style="display:flex;gap:.4rem;"></div>
       <label style="font-family:'DM Mono',monospace;font-size:.6rem;text-transform:uppercase;color:rgba(26,17,8,.55);display:flex;align-items:center;gap:.4rem;">Size
@@ -2717,9 +2725,13 @@ I paint with acrylic on large canvas, working in layers over weeks. Every piece 
       <button id="acDownloadBtn" style="padding:.5rem .9rem;background:var(--gold);color:var(--ink);border:none;border-radius:4px;font-family:'DM Mono',monospace;font-size:.65rem;text-transform:uppercase;cursor:pointer;">Save Image</button>
     </div>
 
-    <canvas id="acCanvas" width="1000" height="620" style="width:100%;max-width:1000px;height:auto;aspect-ratio:1000/620;display:block;margin:0 auto;background:#fff;border:1px solid rgba(201,151,58,.3);border-radius:6px;touch-action:none;cursor:crosshair;"></canvas>
+    <div style="position:relative;max-width:1000px;margin:0 auto;">
+      <canvas id="acCanvas" width="1000" height="620" style="width:100%;height:auto;aspect-ratio:1000/620;display:block;background:#fdfdfb;border-radius:4px;touch-action:none;cursor:none;box-shadow:0 14px 40px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.35), inset 0 0 60px rgba(0,0,0,.05);"></canvas>
+      <div style="position:absolute;inset:0;border-radius:4px;pointer-events:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E&quot;);mix-blend-mode:multiply;opacity:.5;"></div>
+      <div id="acBrushCursor" style="display:none;position:absolute;border:1.5px solid #1a1108;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);"></div>
+    </div>
 
-    <div id="acBridge" style="display:none;text-align:center;margin-top:1.8rem;padding:1.5rem;background:rgba(201,151,58,.08);border-radius:6px;">
+    <div id="acBridge" style="display:none;text-align:center;margin-top:1.8rem;padding:1.5rem;background:rgba(245,239,228,.95);border-radius:6px;">
       <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(26,17,8,.7);font-size:1.05rem;margin-bottom:1rem;">Loved making that? You could be sharing work like this with the world.</p>
       <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;">
         <button id="acBridgeApply" style="padding:.7rem 1.4rem;background:var(--gold);color:var(--ink);border:none;border-radius:4px;font-family:'Cinzel',serif;letter-spacing:.06em;text-transform:uppercase;font-size:.8rem;cursor:pointer;">Apply to Become a Creator</button>
@@ -2727,8 +2739,7 @@ I paint with acrylic on large canvas, working in layers over weeks. Every piece 
       </div>
     </div>
   </div>
-
-</div>
+  </div></div>
 <script>
 
 /* ===== CURSOR ===== */
