@@ -3678,8 +3678,7 @@ function acInitCanvas(){
   acCtx.lineCap='round';
   acCtx.lineJoin='round';
   acPushUndoState();
-
-  var swatchWrap=document.getElementById('acSwatches');
+  acInitColorWheel();  var swatchWrap=document.getElementById('acSwatches');
   acSwatchColors.forEach(function(c){
     var b=document.createElement('button');
     b.style.cssText='width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.2);background:'+c+';cursor:pointer;padding:0;';
