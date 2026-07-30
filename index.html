@@ -3698,39 +3698,213 @@ function acGetPos(e){
   return { x:(e.clientX-rect.left)*scaleX, y:(e.clientY-rect.top)*scaleY };
 }
 
+// ===== BRUSH ENGINE STATE (v3) =====
+var acSmoothX=0, acSmoothY=0;
+var acStrokeCanvas=null, acStrokeCtx=null, acBaseSnapshot=null;
+
+function acBrushType(){
+  var el=document.getElementById('acBrushType');
+  return el ? el.value : 'pencil';
+}
+function acBrushSmoothing(){
+  var t=acBrushType();
+  if(t==='ink') return 0.6;
+  if(t==='pencil') return 0.5;
+  if(t==='marker') return 0.4;
+  if(t==='watercolor') return 0.18;
+  if(t==='airbrush') return 0.25;
+  return 0.4;
+}
+function acBrushComposite(){
+  var t=acBrushType();
+  if(t==='marker' || t==='watercolor') return 'multiply';
+  return 'source-over';
+}
+function acPressureFactor(e){
+  var p = (e && typeof e.pressure === 'number') ? e.pressure : 0;
+  if(!p || p<=0) return 1;
+  return 0.4 + p*1.2;
+}
+
+function acHexToRgb(hex){
+  var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return m ? {r:parseInt(m[1],16), g:parseInt(m[2],16), b:parseInt(m[3],16)} : {r:0,g:0,b:0};
+}
+function acRgbToStr(rgb, alpha){ return 'rgba('+rgb.r+','+rgb.g+','+rgb.b+','+(alpha===undefined?1:alpha)+')'; }
+
+function acSampleBaseColor(x,y){
+  if(!acBaseSnapshot) return null;
+  var ix = Math.max(0, Math.min(acCanvas.width-1, Math.round(x)));
+  var iy = Math.max(0, Math.min(acCanvas.height-1, Math.round(y)));
+  var idx = (iy*acCanvas.width + ix)*4;
+  var d = acBaseSnapshot.data;
+  if(d[idx+3]===0) return null;
+  return {r:d[idx], g:d[idx+1], b:d[idx+2]};
+}
+function acMixColors(rgbA, rgbB, ratio){
+  return {
+    r: Math.round(rgbA.r*ratio + rgbB.r*(1-ratio)),
+    g: Math.round(rgbA.g*ratio + rgbB.g*(1-ratio)),
+    b: Math.round(rgbA.b*ratio + rgbB.b*(1-ratio))
+  };
+}
+
+function acStampDab(ctx,x,y,radius,colorStr,alpha){
+  var grad = ctx.createRadialGradient(x,y,0,x,y,radius);
+  grad.addColorStop(0, colorStr);
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(x,y,radius,0,Math.PI*2);
+  ctx.fill();
+}
+
+function acStampAlongPath(ctx,x0,y0,x1,y1,size,baseColorHex,alpha,pickup){
+  var dist = Math.hypot(x1-x0,y1-y0);
+  var step = Math.max(2, size*0.35);
+  var steps = Math.max(1, Math.floor(dist/step));
+  var rgb = acHexToRgb(baseColorHex);
+  for(var i=0;i<=steps;i++){
+    var t = steps===0 ? 0 : i/steps;
+    var x = x0+(x1-x0)*t;
+    var y = y0+(y1-y0)*t;
+    var jitterAlpha = alpha*(0.55+Math.random()*0.45);
+    var colorStr;
+    if(pickup){
+      var under = acSampleBaseColor(x,y);
+      colorStr = under ? acRgbToStr(acMixColors(rgb, under, 0.8)) : acRgbToStr(rgb);
+    } else {
+      colorStr = acRgbToStr(rgb);
+    }
+    acStampDab(ctx,x,y,size/2,colorStr,jitterAlpha);
+  }
+}
+
+var acAirbrushInterval=null;
+function acStartAirbrushSpray(){
+  if(acAirbrushInterval) clearInterval(acAirbrushInterval);
+  acAirbrushInterval = setInterval(function(){
+    if(!acDrawing || acBrushType()!=='airbrush') return;
+    var color=document.getElementById('acColorPicker').value;
+    var alpha=acCurrentOpacity()*0.35;
+    var size=acCurrentSize();
+    var rgb=acHexToRgb(color);
+    for(var i=0;i<4;i++){
+      var ang=Math.random()*Math.PI*2;
+      var r=Math.random()*size;
+      acStampDab(acStrokeCtx, acSmoothX+Math.cos(ang)*r, acSmoothY+Math.sin(ang)*r, size*0.18, acRgbToStr(rgb), alpha);
+    }
+    acCompositeStroke();
+  }, 40);
+}
+function acStopAirbrushSpray(){
+  if(acAirbrushInterval){ clearInterval(acAirbrushInterval); acAirbrushInterval=null; }
+}
+
+function acCompositeStroke(){
+  if(!acBaseSnapshot) return;
+  acCtx.putImageData(acBaseSnapshot,0,0);
+  acCtx.save();
+  acCtx.globalCompositeOperation = acBrushComposite();
+  acCtx.globalAlpha = acCurrentOpacity();
+  acCtx.drawImage(acStrokeCanvas,0,0);
+  acCtx.restore();
+}
 function acPointerDown(e){
   acDrawing=true;
   var pos=acGetPos(e);
   acLastX=pos.x; acLastY=pos.y;
-  acCtx.beginPath();
-  acCtx.arc(pos.x,pos.y, acCurrentSize()/2, 0, Math.PI*2);
-  acCtx.fillStyle=acErasing?'#ffffff':document.getElementById('acColorPicker').value;
-  acCtx.globalAlpha=acCurrentOpacity();
-  acCtx.fill();
+  acSmoothX=pos.x; acSmoothY=pos.y;
+
+  if(acErasing){
+    var size=acCurrentSize()*acPressureFactor(e);
+    acCtx.globalCompositeOperation='source-over';
+    acCtx.beginPath();
+    acCtx.arc(pos.x,pos.y,size/2,0,Math.PI*2);
+    acCtx.fillStyle='#ffffff';
+    acCtx.globalAlpha=1;
+    acCtx.fill();
+    return;
+  }
+
+  acBaseSnapshot = acCtx.getImageData(0,0,acCanvas.width,acCanvas.height);
+  if(!acStrokeCanvas){
+    acStrokeCanvas = document.createElement('canvas');
+    acStrokeCanvas.width = acCanvas.width;
+    acStrokeCanvas.height = acCanvas.height;
+    acStrokeCtx = acStrokeCanvas.getContext('2d');
+  }
+  acStrokeCtx.clearRect(0,0,acStrokeCanvas.width,acStrokeCanvas.height);
+
+  var color=document.getElementById('acColorPicker').value;
+  var size2=acCurrentSize()*acPressureFactor(e);
+  var type=acBrushType();
+  var rgb=acHexToRgb(color);
+  if(type==='airbrush' || type==='watercolor'){
+    acStampDab(acStrokeCtx,pos.x,pos.y,size2/2,acRgbToStr(rgb),1);
+    if(type==='airbrush') acStartAirbrushSpray();
+  } else {
+    acStrokeCtx.beginPath();
+    acStrokeCtx.arc(pos.x,pos.y,size2/2,0,Math.PI*2);
+    acStrokeCtx.fillStyle=color;
+    acStrokeCtx.globalAlpha=1;
+    acStrokeCtx.fill();
+  }
+  acCompositeStroke();
 }
 
 function acCurrentSize(){ return parseInt(document.getElementById('acBrushSize').value,10) || 5; }
 function acCurrentOpacity(){ return (parseInt(document.getElementById('acOpacity').value,10)||100)/100; }
 
 function acPointerMove(e){
+  acUpdateBrushCursor(e);
   if(!acDrawing) return;
   var pos=acGetPos(e);
-  var midX=(acLastX+pos.x)/2;
-  var midY=(acLastY+pos.y)/2;
-  acCtx.strokeStyle=acErasing?'#ffffff':document.getElementById('acColorPicker').value;
-  acCtx.lineWidth=acCurrentSize();
-  acCtx.globalAlpha=acCurrentOpacity();
-  acCtx.beginPath();
-  acCtx.moveTo(acLastX,acLastY);
-  acCtx.quadraticCurveTo(acLastX,acLastY, midX, midY);
-  acCtx.stroke();
-  acLastX=pos.x; acLastY=pos.y;
+  var smoothing=acBrushSmoothing();
+  acSmoothX += (pos.x-acSmoothX)*smoothing;
+  acSmoothY += (pos.y-acSmoothY)*smoothing;
+  var size=acCurrentSize()*acPressureFactor(e);
+
+  if(acErasing){
+    acCtx.globalCompositeOperation='source-over';
+    acCtx.strokeStyle='#ffffff';
+    acCtx.lineWidth=size;
+    acCtx.globalAlpha=1;
+    acCtx.beginPath();
+    acCtx.moveTo(acLastX,acLastY);
+    acCtx.quadraticCurveTo(acLastX,acLastY, acSmoothX,acSmoothY);
+    acCtx.stroke();
+    acLastX=acSmoothX; acLastY=acSmoothY;
+    return;
+  }
+
+  var color=document.getElementById('acColorPicker').value;
+  var type=acBrushType();
+  if(type==='airbrush' || type==='watercolor'){
+    acStampAlongPath(acStrokeCtx,acLastX,acLastY,acSmoothX,acSmoothY,size,color,1, type==='watercolor');
+  } else {
+    acStrokeCtx.strokeStyle=color;
+    acStrokeCtx.lineWidth=size;
+    acStrokeCtx.lineCap='round';
+    acStrokeCtx.lineJoin='round';
+    acStrokeCtx.globalAlpha = type==='pencil' ? (0.85+Math.random()*0.15) : 1;
+    acStrokeCtx.beginPath();
+    acStrokeCtx.moveTo(acLastX,acLastY);
+    acStrokeCtx.quadraticCurveTo(acLastX,acLastY, acSmoothX,acSmoothY);
+    acStrokeCtx.stroke();
+  }
+  acCompositeStroke();
+  acLastX=acSmoothX; acLastY=acSmoothY;
 }
 
 function acPointerUp(){
   if(!acDrawing) return;
   acDrawing=false;
+  acStopAirbrushSpray();
   acCtx.globalAlpha=1;
+  acCtx.globalCompositeOperation='source-over';
+  acBaseSnapshot=null;
   acPushUndoState();
   if(!acHasDrawn){
     acHasDrawn=true;
@@ -3741,6 +3915,20 @@ function acPointerUp(){
   }
 }
 
+function acUpdateBrushCursor(e){
+  var cursor=document.getElementById('acBrushCursor');
+  if(!cursor) return;
+  var rect=acCanvas.getBoundingClientRect();
+  var scaleX=rect.width/acCanvas.width;
+  var displaySize=acCurrentSize()*scaleX;
+  cursor.style.width=displaySize+'px';
+  cursor.style.height=displaySize+'px';
+  cursor.style.left=(e.clientX-rect.left)+'px';
+  cursor.style.top=(e.clientY-rect.top)+'px';
+  cursor.style.borderColor=acErasing?'#999':document.getElementById('acColorPicker').value;
+  cursor.style.opacity=acCurrentOpacity();
+  cursor.style.display='block';
+}
 function acPushUndoState(){
   if(!acCtx) return;
   try{
