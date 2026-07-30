@@ -3596,6 +3596,225 @@ function startConversation(otherUserId){
       if(convo) setTimeout(function(){ openConversation(convo.id, otherUserId); }, 50);
     });
   });
+}var sketchPrompts=[
+  "Draw something that makes you feel calm",
+  "Sketch your happy place",
+  "Create a shape that represents joy",
+  "Draw the view from your window",
+  "Imagine a creature no one has ever seen",
+  "Sketch a memory from this year",
+  "Draw what music looks like",
+  "Create a pattern using only three shapes",
+  "Sketch someone you admire",
+  "Draw your morning, however it felt"
+];
+var acCanvas, acCtx, acDrawing=false, acErasing=false, acLastX=0, acLastY=0;
+var acUndoStack=[], acRedoStack=[], acHasDrawn=false;
+var acSwatchColors=['#1a1108','#c9973a','#b84c2b','#5a7a5e','#d4917a','#2c5c8a','#6b3fa0','#ffffff'];
+
+function loadDailySketchPrompt(){
+  var now=new Date();
+  var start=new Date(now.getFullYear(),0,0);
+  var dayOfYear=Math.floor((now-start)/(1000*60*60*24));
+  var prompt=sketchPrompts[dayOfYear%sketchPrompts.length];
+  var el=document.getElementById('acPromptText');
+  if(el) el.textContent='Today\'s prompt: '+prompt;
+}
+
+function acShowFork(){
+  document.getElementById('acFork').style.display='block';
+  document.getElementById('acApply').style.display='none';
+  document.getElementById('acSketch').style.display='none';
+  var nav=document.getElementById('navbar'); if(nav) nav.style.display='';
+}
+function acShowApply(){
+  document.getElementById('acFork').style.display='none';
+  document.getElementById('acApply').style.display='block';
+  document.getElementById('acSketch').style.display='none';
+  document.getElementById('acApplyForm').style.display='block';
+  document.getElementById('acApplyThanks').style.display='none';
+  var nav=document.getElementById('navbar'); if(nav) nav.style.display='';
+}
+function acShowSketch(){
+  document.getElementById('acFork').style.display='none';
+  document.getElementById('acApply').style.display='none';
+  document.getElementById('acSketch').style.display='block';
+  var nav=document.getElementById('navbar'); if(nav) nav.style.display='none';
+  loadDailySketchPrompt();
+  if(!acCanvas) acInitCanvas();
+}
+
+function acInitCanvas(){
+  acCanvas=document.getElementById('acCanvas');
+  if(!acCanvas) return;
+  acCtx=acCanvas.getContext('2d');
+  acCtx.fillStyle='#ffffff';
+  acCtx.fillRect(0,0,acCanvas.width,acCanvas.height);
+  acCtx.lineCap='round';
+  acCtx.lineJoin='round';
+  acPushUndoState();
+
+  var swatchWrap=document.getElementById('acSwatches');
+  acSwatchColors.forEach(function(c){
+    var b=document.createElement('button');
+    b.style.cssText='width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.2);background:'+c+';cursor:pointer;padding:0;';
+    b.addEventListener('click',function(){
+      document.getElementById('acColorPicker').value=c;
+      acErasing=false;
+    });
+    swatchWrap.appendChild(b);
+  });
+
+  acCanvas.addEventListener('pointerdown', acPointerDown);
+  acCanvas.addEventListener('pointermove', acPointerMove);
+  window.addEventListener('pointerup', acPointerUp);
+  window.addEventListener('pointercancel', acPointerUp);
+
+  document.getElementById('acEraserBtn').addEventListener('click', function(){
+    acErasing=!acErasing;
+    this.style.background=acErasing?'var(--gold)':'#fff';
+  });
+  document.getElementById('acUndoBtn').addEventListener('click', acUndo);
+  document.getElementById('acRedoBtn').addEventListener('click', acRedo);
+  document.getElementById('acClearBtn').addEventListener('click', acClearCanvas);
+  document.getElementById('acDownloadBtn').addEventListener('click', acDownloadCanvas);
+}
+
+function acGetPos(e){
+  var rect=acCanvas.getBoundingClientRect();
+  var scaleX=acCanvas.width/rect.width;
+  var scaleY=acCanvas.height/rect.height;
+  return { x:(e.clientX-rect.left)*scaleX, y:(e.clientY-rect.top)*scaleY };
+}
+
+function acPointerDown(e){
+  acDrawing=true;
+  var pos=acGetPos(e);
+  acLastX=pos.x; acLastY=pos.y;
+  acCtx.beginPath();
+  acCtx.arc(pos.x,pos.y, acCurrentSize()/2, 0, Math.PI*2);
+  acCtx.fillStyle=acErasing?'#ffffff':document.getElementById('acColorPicker').value;
+  acCtx.globalAlpha=acCurrentOpacity();
+  acCtx.fill();
+}
+
+function acCurrentSize(){ return parseInt(document.getElementById('acBrushSize').value,10) || 5; }
+function acCurrentOpacity(){ return (parseInt(document.getElementById('acOpacity').value,10)||100)/100; }
+
+function acPointerMove(e){
+  if(!acDrawing) return;
+  var pos=acGetPos(e);
+  var midX=(acLastX+pos.x)/2;
+  var midY=(acLastY+pos.y)/2;
+  acCtx.strokeStyle=acErasing?'#ffffff':document.getElementById('acColorPicker').value;
+  acCtx.lineWidth=acCurrentSize();
+  acCtx.globalAlpha=acCurrentOpacity();
+  acCtx.beginPath();
+  acCtx.moveTo(acLastX,acLastY);
+  acCtx.quadraticCurveTo(acLastX,acLastY, midX, midY);
+  acCtx.stroke();
+  acLastX=pos.x; acLastY=pos.y;
+}
+
+function acPointerUp(){
+  if(!acDrawing) return;
+  acDrawing=false;
+  acCtx.globalAlpha=1;
+  acPushUndoState();
+  if(!acHasDrawn){
+    acHasDrawn=true;
+    setTimeout(function(){
+      var bridge=document.getElementById('acBridge');
+      if(bridge) bridge.style.display='block';
+    }, 600);
+  }
+}
+
+function acPushUndoState(){
+  if(!acCtx) return;
+  try{
+    var data=acCtx.getImageData(0,0,acCanvas.width,acCanvas.height);
+    acUndoStack.push(data);
+    if(acUndoStack.length>30) acUndoStack.shift();
+    acRedoStack=[];
+  }catch(e){}
+}
+
+function acUndo(){
+  if(acUndoStack.length<2) return;
+  var current=acUndoStack.pop();
+  acRedoStack.push(current);
+  var prev=acUndoStack[acUndoStack.length-1];
+  acCtx.putImageData(prev,0,0);
+}
+
+function acRedo(){
+  if(!acRedoStack.length) return;
+  var next=acRedoStack.pop();
+  acUndoStack.push(next);
+  acCtx.putImageData(next,0,0);
+}
+
+function acClearCanvas(){
+  acCtx.globalAlpha=1;
+  acCtx.fillStyle='#ffffff';
+  acCtx.fillRect(0,0,acCanvas.width,acCanvas.height);
+  acPushUndoState();
+}
+
+function acDownloadCanvas(){
+  var link=document.createElement('a');
+  link.download='art-thou-sketch.png';
+  link.href=acCanvas.toDataURL('image/png');
+  link.click();
+}
+
+function acSubmitApplication(){
+  var name=document.getElementById('acName').value.trim();
+  var email=document.getElementById('acEmail').value.trim();
+  var medium=document.getElementById('acMedium').value;
+  var portfolio=document.getElementById('acPortfolio').value.trim();
+  var message=document.getElementById('acMessage').value.trim();
+  var errEl=document.getElementById('acApplyError');
+  errEl.style.display='none';
+  if(!name || !email || !medium){
+    errEl.textContent='Please fill in your name, email, and medium.';
+    errEl.style.display='block';
+    return;
+  }
+  var btn=document.getElementById('acSubmitBtn');
+  btn.disabled=true;
+  btn.textContent='Submitting…';
+  sb.from('creator_applications').insert({
+    name:name, email:email, medium:medium, portfolio_link:portfolio, message:message, status:'pending'
+  }).then(function(res){
+    btn.disabled=false;
+    btn.textContent='Submit Application';
+    if(res.error){
+      errEl.textContent='Something went wrong. Please try again.';
+      errEl.style.display='block';
+      return;
+    }
+    document.getElementById('acApplyForm').style.display='none';
+    document.getElementById('acApplyThanks').style.display='block';
+  });
+}
+
+function initArtCreate(){
+  var pickApply=document.getElementById('acPickApply');
+  var pickSketch=document.getElementById('acPickSketch');
+  if(pickApply) pickApply.addEventListener('click', acShowApply);
+  if(pickSketch) pickSketch.addEventListener('click', acShowSketch);
+  var backApply=document.getElementById('acBackFromApply');
+  var backSketch=document.getElementById('acBackFromSketch');
+  if(backApply) backApply.addEventListener('click', acShowFork);
+  if(backSketch) backSketch.addEventListener('click', acShowFork);
+  var submitBtn=document.getElementById('acSubmitBtn');
+  if(submitBtn) submitBtn.addEventListener('click', acSubmitApplication);
+  var bridgeApply=document.getElementById('acBridgeApply');
+  var bridgeDismiss=document.getElementById('acBridgeDismiss');
+  if(bridgeApply) bridgeApply.addEventListener('click', function(){ document.getElementById('acBridge').style.display='none'; acShowApply(); });
+  if(bridgeDismiss) bridgeDismiss.addEventListener('click', function(){ document.getElementById('acBridge').style.display='none'; });
 }function getVisitorId(){  var vid = localStorage.getItem('at_visitor_id');
   if(!vid){ vid = 'v_'+Math.random().toString(36).slice(2)+Date.now(); localStorage.setItem('at_visitor_id', vid); }
   return vid;
