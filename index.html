@@ -2818,7 +2818,9 @@ function showPage(id){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   var pg = document.getElementById(id);
  if(pg) pg.classList.add('active');
-  if(id==='msg' && typeof window.loadConversations==='function') window.loadConversations();  document.querySelectorAll('.mode-tab').forEach(function(t){t.classList.remove('active');});
+if(id==='msg' && typeof window.loadConversations==='function') window.loadConversations();
+      if(id==='social'){ if(typeof updateSocialComposerVisibility==='function') updateSocialComposerVisibility(); if(typeof loadSocialFeed==='function') loadSocialFeed(); }
+      document.querySelectorAll('.mode-tab').forEach(function(t){t.classList.remove('active');});
   var tab = document.getElementById('tab-'+id);
   if(tab) tab.classList.add('active');
   var nav = document.getElementById('navbar');
