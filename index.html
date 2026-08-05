@@ -2643,10 +2643,38 @@ I paint with acrylic on large canvas, working in layers over weeks. Every piece 
         </div>
       </div>
     </div>
+   </div><!-- ===== ART SOCIAL PAGE ===== -->
+<div id="social" class="page">
+  <div style="max-width:640px;margin:3rem auto 6rem;padding:0 1.5rem;">
+    <div style="text-align:center;margin-bottom:2.2rem;">
+      <h1 style="font-family:'Playfair Display',serif;font-weight:900;font-size:2.1rem;color:var(--ink);margin:0 0 .4rem;">Art <em style="color:var(--gold);font-style:italic;">Social</em></h1>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:rgba(26,17,8,.6);margin:0;">Not selling. Not teaching. Just the work, as it happens.</p>
+    </div>
+
+    <div id="socialComposerBar" style="display:none;text-align:center;margin-bottom:2.5rem;">
+      <button onclick="openSocialComposer()" style="font-family:'Cinzel',serif;font-weight:500;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:var(--ink);border:none;padding:.9rem 2rem;cursor:pointer;">Share what you're making</button>
+    </div>
+    <div id="socialLoginPrompt" style="display:none;text-align:center;margin-bottom:2.5rem;font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(26,17,8,.55);">
+      <a href="#" onclick="showPage('login');return false;" style="color:var(--gold);">Log in as an Art Lover</a> to share your own work here.
+    </div>
+
+    <div id="socialComposerModal" style="display:none;position:fixed;inset:0;background:rgba(26,17,8,.55);z-index:500;align-items:center;justify-content:center;">
+      <div style="background:var(--cream, #f5efe4);max-width:480px;width:92%;padding:2.2rem;position:relative;max-height:88vh;overflow-y:auto;">
+        <button onclick="closeSocialComposer()" style="position:absolute;top:.8rem;right:1rem;background:none;border:none;font-size:1.3rem;cursor:pointer;color:rgba(26,17,8,.5);">✕</button>
+        <h3 style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.3rem;color:var(--ink);margin:0 0 1.2rem;">Share your process</h3>
+        <input type="file" id="socialMediaInput" accept="image/*,video/*" style="display:block;width:100%;margin-bottom:1rem;font-family:'Cormorant Garamond',serif;">
+        <textarea id="socialCaptionInput" placeholder="What are you working on?" style="width:100%;box-sizing:border-box;min-height:90px;font-family:'Cormorant Garamond',serif;font-size:1.05rem;padding:.7rem;border:1px solid rgba(26,17,8,.2);margin-bottom:1rem;resize:vertical;"></textarea>
+        <input type="text" id="socialContactInput" placeholder="How can people reach you? (optional)" style="width:100%;box-sizing:border-box;font-family:'Cormorant Garamond',serif;font-size:.95rem;padding:.6rem .7rem;border:1px solid rgba(26,17,8,.15);margin-bottom:1.2rem;">
+        <p id="socialComposerError" style="display:none;color:#a33;font-family:'Cormorant Garamond',serif;font-size:.9rem;margin:0 0 1rem;"></p>
+        <button id="socialSubmitBtn" onclick="submitSocialPost()" style="width:100%;font-family:'Cinzel',serif;font-weight:500;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;background:var(--gold);color:var(--ink);border:none;padding:.9rem;cursor:pointer;">Post it</button>
+      </div>
+    </div>
+
+    <div id="socialFeed"></div>
+    <p id="socialFeedEmpty" style="display:none;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(26,17,8,.5);margin-top:2rem;">No posts yet — be the first to share what you're making.</p>
   </div>
 </div><!-- ===== ART CREATE PAGE ===== -->
 <div id="artcreate" class="page">
-
   <!-- FORK VIEW -->
   <div id="acFork" style="max-width:900px;margin:5rem auto;padding:0 1.5rem;text-align:center;">
     <div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;">
