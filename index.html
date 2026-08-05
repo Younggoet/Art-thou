@@ -4255,18 +4255,110 @@ function toggleComments(itemId){
   host.style.display = show ? 'block' : 'none';
   if(show) refreshComments(itemId);
 }
-
-async function submitComment(itemId){
-  var nameEl = document.getElementById('cname-'+itemId);
-  var bodyEl = document.getElementById('cbody-'+itemId);
-  var name = (nameEl.value||'').trim();
-  var body = (bodyEl.value||'').trim();
-  if(!body) return;
-  await sb.from('comments').insert({item_id: itemId, name: name||'Anonymous', body: body});
-  nameEl.value=''; bodyEl.value='';
-  refreshComments(itemId);
+/* ===== ART SOCIAL ===== */
+function renderSocialPost(p){
+  var when = '';
+  try { when = new Date(p.created_at).toLocaleDateString(undefined,{month:'short', day:'numeric'}); } catch(e){}
+  var mediaBlock = p.media_type === 'video'
+    ? '<video src="'+p.media_url+'" controls playsinline style="width:100%;display:block;max-height:520px;object-fit:contain;background:#1a1108;"></video>'
+    : '<img src="'+p.media_url+'" alt="" style="width:100%;display:block;max-height:520px;object-fit:contain;background:#1a1108;">';
+  var name = p.display_name || 'Art Lover';
+  var caption = (p.caption||'').replace(/</g,'&lt;');
+  return '<div style="margin-bottom:2.6rem;">'+
+    '<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;">'+
+      '<div style="width:34px;height:34px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:\'Playfair Display\',serif;font-weight:700;color:var(--ink);font-size:.85rem;">'+name.charAt(0).toUpperCase()+'</div>'+
+      '<div><p style="font-family:\'Cinzel\',serif;font-weight:500;font-size:.78rem;color:var(--ink);margin:0;">'+name+'</p>'+
+      '<p style="font-family:\'DM Mono\',monospace;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(26,17,8,.4);margin:0;">'+when+'</p></div>'+
+    '</div>'+
+    '<div style="box-shadow:0 14px 34px rgba(26,17,8,.18);">'+mediaBlock+'</div>'+
+    '<p style="font-family:\'Cormorant Garamond\',serif;font-size:1.1rem;line-height:1.5;color:var(--ink);margin:1rem 0 .7rem;">'+caption+'</p>'+
+    (p.contact_info ? '<p style="font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:.9rem;color:rgba(26,17,8,.55);margin:0 0 .7rem;">Reach out: '+p.contact_info.replace(/</g,'&lt;')+'</p>' : '')+
+    '<div class="listing-social" data-listing-id="'+p.id+'" style="display:flex;align-items:center;gap:1.2rem;padding-top:.7rem;border-top:1px solid rgba(26,17,8,.12);font-family:\'DM Mono\',monospace;font-size:.75rem;color:rgba(26,17,8,.65);">'+
+      '<button class="like-btn" onclick="toggleLike(\''+p.id+'\')" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;color:inherit;display:flex;align-items:center;gap:.3rem;"><span class="like-icon">♡</span> <span class="like-count">0</span></button>'+
+      '<button class="comment-toggle-btn" onclick="toggleComments(\''+p.id+'\')" style="background:none;border:none;cursor:pointer;font-family:inherit;font-size:inherit;color:inherit;display:flex;align-items:center;gap:.3rem;">💬 <span class="comment-count">0</span></button>'+
+    '</div>'+
+    '<div id="comments-'+p.id+'" style="display:none;margin-top:.8rem;"></div>'+
+  '</div>';
 }
 
+async function loadSocialFeed(){
+  var host = document.getElementById('socialFeed');
+  var empty = document.getElementById('socialFeedEmpty');
+  if(!host) return;
+  var {data, error} = await sb.from('social_posts').select('*').order('created_at', {ascending:false});
+  if(error || !data || !data.length){
+    host.innerHTML = '';
+    if(empty) empty.style.display = 'block';
+    return;
+  }
+  if(empty) empty.style.display = 'none';
+  host.innerHTML = data.map(renderSocialPost).join('');
+  data.forEach(function(p){ refreshLikeUI(p.id); });
+}
+
+function updateSocialComposerVisibility(){
+  var bar = document.getElementById('socialComposerBar');
+  var prompt = document.getElementById('socialLoginPrompt');
+  if(!bar || !prompt) return;
+  if(window.currentUser){ bar.style.display='block'; prompt.style.display='none'; }
+  else { bar.style.display='none'; prompt.style.display='block'; }
+}
+
+function openSocialComposer(){
+  if(!window.currentUser){ showPage('login'); return; }
+  document.getElementById('socialComposerModal').style.display = 'flex';
+}
+function closeSocialComposer(){
+  document.getElementById('socialComposerModal').style.display = 'none';
+  document.getElementById('socialComposerError').style.display = 'none';
+}
+
+async function submitSocialPost(){
+  var fileEl = document.getElementById('socialMediaInput');
+  var captionEl = document.getElementById('socialCaptionInput');
+  var contactEl = document.getElementById('socialContactInput');
+  var errEl = document.getElementById('socialComposerError');
+  var btn = document.getElementById('socialSubmitBtn');
+  errEl.style.display='none';
+
+  var file = fileEl.files && fileEl.files[0];
+  var caption = (captionEl.value||'').trim();
+  if(!file){ errEl.textContent='Add an image or video.'; errEl.style.display='block'; return; }
+  if(!caption){ errEl.textContent='Add a caption.'; errEl.style.display='block'; return; }
+  if(!window.currentUser){ showPage('login'); return; }
+
+  btn.disabled = true; btn.textContent = 'Posting…';
+  try {
+    var mediaType = file.type && file.type.indexOf('video') === 0 ? 'video' : 'image';
+    var ext = (file.name.split('.').pop()||'jpg').toLowerCase();
+    var path = window.currentUser.id + '/' + Date.now() + '.' + ext;
+    var upload = await sb.storage.from('social-posts').upload(path, file);
+    if(upload.error) throw upload.error;
+    var pub = sb.storage.from('social-posts').getPublicUrl(path);
+    var mediaUrl = pub.data.publicUrl;
+
+    var profRes = await sb.from('profiles').select('display_name').eq('id', window.currentUser.id).single();
+    var displayName = (profRes.data && profRes.data.display_name) ? profRes.data.display_name : 'Art Lover';
+
+    var ins = await sb.from('social_posts').insert({
+      user_id: window.currentUser.id,
+      display_name: displayName,
+      media_url: mediaUrl,
+      media_type: mediaType,
+      caption: caption,
+      contact_info: (contactEl.value||'').trim() || null
+    });
+    if(ins.error) throw ins.error;
+
+    fileEl.value=''; captionEl.value=''; contactEl.value='';
+    closeSocialComposer();
+    loadSocialFeed();
+  } catch(err){
+    errEl.textContent = 'Something went wrong posting that. Try again.';
+    errEl.style.display='block';
+  }
+  btn.disabled = false; btn.textContent = 'Post it';
+}
 function normCat(c){  c=(c||'').toString().toLowerCase();
   if(c.indexOf('paint')>-1||c.indexOf('wall')>-1) return 'paintings';
   if(c.indexOf('jewel')>-1) return 'jewelry';
